@@ -43,7 +43,7 @@ const addFilterInput = (i) => {
       <input id="${filterObj.id[i]}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${filterObj.value[i]}" checked>
       <label class="trip-filters__filter-label" for="${filterObj.id[i]}">${filterObj.text[i]}</label>
     </div>`
-  ); 
+  );
 };
 
 const addTripEvent = () => {
@@ -118,7 +118,7 @@ const registrationObj = {
   labelClass: [`event__type-label--check-in`, `event__type-label--sightseeing`, `event__type-label--restaurant`]
 };
 
-const addRegistrationInput = (i) => {  
+const addRegistrationInput = (i) => {
   return (
     `<div class="event__type-item">
       <input id="${registrationObj.id[i]}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${registrationObj.value[i]}">
