@@ -34,7 +34,7 @@ const addFilters = (text) => {
 const filterObj = {
   value: [`past`, `future`, `everything`],
   text: [`Past`, `Future`, `Everything`],
-  id: [ `filter-past`, `filter-future`, `filter-everything`]
+  id: [`filter-past`, `filter-future`, `filter-everything`]
 };
 
 const addFilterInput = (i) => {
@@ -187,7 +187,7 @@ const mainBody = document.querySelector(`.page-body`);
 // Header components
 const headerContainer = mainBody.querySelector(`.page-header`);
 const tripCounterContainer = headerContainer.querySelector(`.trip-main`);
-const menuContainer = tripCounterContainer.querySelector(`.trip-controls`)
+const menuContainer = tripCounterContainer.querySelector(`.trip-controls`);
 render(tripCounterContainer, addTripCount(), `afterbegin`);
 render(menuContainer, addMenu(), `beforeend`);
 render(menuContainer, addFilters(), `beforeend`);
