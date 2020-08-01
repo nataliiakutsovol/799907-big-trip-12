@@ -192,9 +192,9 @@ render(tripCounterContainer, addTripCount(), `afterbegin`);
 render(menuContainer, addMenu(), `beforeend`);
 render(menuContainer, addFilters(), `beforeend`);
 const filterItemContainer = menuContainer.querySelector(`.trip-filters`);
-for(let i = 0; i < filterObj.value.length; i++) {
+for (let i = 0; i < filterObj.value.length; i++) {
   render(filterItemContainer, addFilterInput(i), `afterbegin`);
-};
+}
 
 // main body components
 const mainContainer = mainBody.querySelector(`.page-main`);
@@ -209,17 +209,17 @@ render(tripEventWrapper, addEventTypeIcon(), `afterbegin`);
 render(tripEventDestination, addEventDestination(), `afterbegin`);
 render(tripEventTiming, addEventTime(), `afterbegin`);
 render(tripEventPricing, addEventPrice(), `afterbegin`);
-for(let i = 0; i < btnObj.type.length; i++) {
+for (let i = 0; i < btnObj.type.length; i++) {
   render(tripEventsHeader, addBtn(i), `beforeend`);
-};
+}
 const tripTransferList = tripEventWrapper.querySelector(`.event__type-list`);
 render(tripTransferList, addTransferList(), `afterbegin`);
 const transferItem = tripTransferList.querySelector(`.event__transfer`);
-for(let i = 0; i < transferObj.value.length; i++) {
+for (let i = 0; i < transferObj.value.length; i++) {
   render(transferItem, addTransferInput(i), `beforeend`);
-};
+}
 render(tripTransferList, addRegistrationList(), `beforeend`);
 const registrationItem = tripTransferList.querySelector(`.event__registration`);
-for(let i = 0; i < registrationObj.value.length; i++) {
+for (let i = 0; i < registrationObj.value.length; i++) {
   render(registrationItem, addRegistrationInput(i), `beforeend`);
-};
+}
