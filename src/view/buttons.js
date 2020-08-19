@@ -1,11 +1,31 @@
-export const btnObj = {
-  text: [`Save`, `Cancel`],
-  type: [`submit`, `reset`],
-  btnClass: [`event__save-btn  btn  btn--blue`, `event__reset-btn`]
-};
+import {createElement} from "./../utils.js";
+import {btnObj} from "./../const.js";
 
-export const addBtn = (i) => {
+const addBtn = (i) => {
   return (
     `<button class="${btnObj.btnClass[i]}" type="${btnObj.type[i]}">${btnObj.text[i]}</button>`
   );
 };
+
+export default class Buttons {
+  constructor(i) {
+    this._element = null;
+    this._i = i;
+  }
+
+  _getTemplate() {
+    return addBtn(this._i);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this._getTemplate(this._i));
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

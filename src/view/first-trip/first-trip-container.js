@@ -1,5 +1,6 @@
+import {createElement} from "./../../utils.js";
 
-export const addFirstTripEvent = () => {
+const addFirstTripEvent = () => {
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
       <header class="event__header">
@@ -15,3 +16,25 @@ export const addFirstTripEvent = () => {
     </form>`
   );
 };
+
+export default class FirstTripEvent {
+  constructor() {
+    this._element = null;
+  }
+
+  _getTemplate() {
+    return addFirstTripEvent();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this._getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

@@ -1,3 +1,5 @@
+import {createElement} from "./../../utils.js";
+
 const addOfferSelectors = (trip) => {
   const {offers} = trip;
   return offers.map((offer) =>
@@ -8,7 +10,7 @@ const addOfferSelectors = (trip) => {
   </li>`).join(``);
 };
 
-export const addTripItem = (trip) => {
+const addTripItem = (trip) => {
   const {icons, transport, city, time, price} = trip;
   const offerDescriptionTemplate = addOfferSelectors(trip);
   return (
@@ -45,3 +47,26 @@ export const addTripItem = (trip) => {
     </li>`
   );
 };
+
+export default class Trip {
+  constructor(trip) {
+    this._element = null;
+    this._trip = trip;
+  }
+
+  _getTemplate() {
+    return addTripItem(this._trip);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this._getTemplate(this._trip));
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

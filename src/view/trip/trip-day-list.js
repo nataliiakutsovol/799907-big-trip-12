@@ -1,4 +1,6 @@
-export const addTripDayList = (i, trip) => {
+import {createElement} from "./../../utils.js";
+
+const addTripDayList = (i, trip) => {
   const {date} = trip;
 
   return (
@@ -11,3 +13,27 @@ export const addTripDayList = (i, trip) => {
     </li>`
   );
 };
+
+export default class TripDayList {
+  constructor(i, trip) {
+    this._element = null;
+    this._i = i;
+    this._trip = trip;
+  }
+
+  _getTemplate() {
+    return addTripDayList(this._i, this._trip);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this._getTemplate(this._i, this._trip));
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

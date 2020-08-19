@@ -1,11 +1,7 @@
-export const transferObj = {
-  id: [`event-type-taxi-1`, `event-type-bus-1`, `event-type-train-1`, `event-type-ship-1`, `event-type-transport-1`, `event-type-drive-1`, `event-type-flight-1`],
-  value: [`taxi`, `bus`, `train`, `ship`, `transport`, `drive`, `flight`],
-  text: [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`],
-  labelClass: [`event__type-label--taxi`, `event__type-label--bus`, `event__type-label--train`, `event__type-label--ship`, `event__type-label--transport`, `event__type-label--drive`, `event__type-label--flight`]
-};
+import {transferObj} from "./../../const.js";
+import {createElement} from "./../../utils.js";
 
-export const addTransferInput = (i) => {
+const addTransferInput = (i) => {
   return (
     `<div class="event__type-item">
       <input id="${transferObj.id[i]}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${transferObj.value[i]}">
@@ -13,3 +9,26 @@ export const addTransferInput = (i) => {
     </div>`
   );
 };
+
+export default class TransferInput {
+  constructor(i) {
+    this._element = null;
+    this._i = i;
+  }
+
+  _getTemplate() {
+    return addTransferInput(this._i);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this._getTemplate(this._i));
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
