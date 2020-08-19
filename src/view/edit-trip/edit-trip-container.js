@@ -1,3 +1,6 @@
+import {BLANK_TRIP} from "./../../const.js";
+import {createElement} from "./../../utils.js";
+
 const addOfferSelectors = (trip) => {
   const {offers} = trip;
   return offers.map((offer) =>
@@ -11,17 +14,11 @@ const addOfferSelectors = (trip) => {
     </div>`).join(``);
 };
 
-export const addEditTripContainer = (trip = {}) => {
-  const {
-    transport = ``,
-    city = ``,
-    date = ``,
-    time = ``,
-    price = ``,
-  } = trip;
+const addEditTripContainer = (trip) => {
+  const {transport, city, date, time, price} = trip;
   const offerDescriptionTemplate = addOfferSelectors(trip);
   return (
-    `<form class="event  event--edit" action="#" method="post">
+    `<form class="event  event--edit">
     <header class="event__header">
       <div class="event__type-wrapper"> </div>
 
@@ -85,3 +82,26 @@ export const addEditTripContainer = (trip = {}) => {
   </form>`
   );
 };
+
+export default class EditTrip {
+  constructor(trip) {
+    this._element = null;
+    this._trip = trip || BLANK_TRIP;
+  }
+
+  _getTemplate() {
+    return addEditTripContainer(this._trip);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this._getTemplate(this._trip));
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

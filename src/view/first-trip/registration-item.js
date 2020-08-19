@@ -1,11 +1,7 @@
-export const registrationObj = {
-  id: [`event-type-check-in-1`, `event-type-sightseeing-1`, `event-type-restaurant-1`],
-  value: [`check-in`, `sightseeing`, `restaurant`],
-  text: [`Check-in`, `Sightseeing`, `Restaurant`],
-  labelClass: [`event__type-label--check-in`, `event__type-label--sightseeing`, `event__type-label--restaurant`]
-};
+import {registrationObj} from "./../../const.js";
+import {createElement} from "./../../utils.js";
 
-export const addRegistrationInput = (i) => {
+const addRegistrationInput = (i) => {
   return (
     `<div class="event__type-item">
       <input id="${registrationObj.id[i]}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${registrationObj.value[i]}">
@@ -13,3 +9,26 @@ export const addRegistrationInput = (i) => {
     </div>`
   );
 };
+
+export default class RegistrationInput {
+  constructor(i) {
+    this._element = null;
+    this._i = i;
+  }
+
+  _getTemplate() {
+    return addRegistrationInput(this._i);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this._getTemplate(this._i));
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
