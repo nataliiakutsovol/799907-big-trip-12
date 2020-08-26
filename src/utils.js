@@ -2,20 +2,11 @@ export const oldrender = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
 
-export const renderPosition = {
-  AFTERBEGIN: `afterbegin`,
-  BEFOREEND: `beforeend`,
-  // AFTEREND: `afterend`,
-};
-
-export const render = (container, element, place) => {
-  switch (place) {
-    case renderPosition.AFTERBEGIN:
-      container.prepend(element);
-      break;
-    case renderPosition.BEFOREEND:
-      container.append(element);
-      break;
+export const render = (container, element, isAfterBegin = false) => {
+  if (isAfterBegin) {
+    container.prepend(element);
+  } else {
+    container.append(element);
   }
 };
 

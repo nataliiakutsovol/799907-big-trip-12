@@ -1,14 +1,5 @@
-import {registrationObj} from "./../../const.js";
+import {registrationText} from "./../../const.js";
 import {createElement} from "./../../utils.js";
-
-const addRegistrationInput = (i) => {
-  return (
-    `<div class="event__type-item">
-      <input id="${registrationObj.id[i]}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${registrationObj.value[i]}">
-      <label class="event__type-label  ${registrationObj.labelClass[i]}" for="${registrationObj.id[i]}">${registrationObj.text[i]}</label>
-    </div>`
-  );
-};
 
 export default class RegistrationInput {
   constructor(i) {
@@ -16,8 +7,13 @@ export default class RegistrationInput {
     this._i = i;
   }
 
-  _getTemplate() {
-    return addRegistrationInput(this._i);
+  _getTemplate(i) {
+    return (
+      `<div class="event__type-item">
+        <input id="event-type-${registrationText[i].toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${registrationText[i].toLowerCase()}">
+        <label class="event__type-label  event__type-label--${registrationText[i].toLowerCase()}" for="event-type-${registrationText[i].toLowerCase()}-1">${registrationText[i]}</label>
+      </div>`
+    );
   }
 
   getElement() {

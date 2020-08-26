@@ -3,7 +3,6 @@ import TripCounter from './view/counter.js';
 import FilterInput from './view/filter-item.js';
 import AcceptFiltersBtn from './view/filter-button.js';
 import SortContainer from './view/sorting-container.js';
-import SortItem from './view/sorting-item.js';
 import FirstTripEvent from './view/first-trip/first-trip-container.js';
 import EditTrip from './view/edit-trip/edit-trip-container.js';
 import TripListContainer from './view/trip/trip-list-container.js';
@@ -25,8 +24,8 @@ import TripDestignation from './view/first-trip/trip-details-destignation';
 
 // mocks
 import {generateTrip} from './mock/trip-item.js';
-import {TRIP_COUNT, filterObj, sortObj, transferObj, registrationObj, btnObj} from './const.js';
-import {render, renderPosition} from './utils.js';
+import {TRIP_COUNT, filterValue, transferValue, registrationText, btnObj} from './const.js';
+import {render} from './utils.js';
 
 const trip = new Array(TRIP_COUNT).fill().map(generateTrip);
 
@@ -36,28 +35,23 @@ const mainBody = document.querySelector(`.page-body`);
 const headerContainer = mainBody.querySelector(`.page-header`);
 const tripCounterContainer = headerContainer.querySelector(`.trip-main`);
 const menuContainer = tripCounterContainer.querySelector(`.trip-controls`);
-render(tripCounterContainer, new TripCounter().getElement(), renderPosition.AFTERBEGIN);
-render(menuContainer, new Menu().getElement(), renderPosition.BEFOREEND);
-render(menuContainer, new AcceptFiltersBtn().getElement(), renderPosition.BEFOREEND);
+render(tripCounterContainer, new TripCounter().getElement(), true);
+render(menuContainer, new Menu().getElement());
+render(menuContainer, new AcceptFiltersBtn().getElement());
 const filterItemContainer = menuContainer.querySelector(`.trip-filters`);
-for (let i = 0; i < filterObj.value.length; i++) {
-  render(filterItemContainer, new FilterInput(i).getElement(), renderPosition.AFTERBEGIN);
+for (let i = 0; i < filterValue.length; i++) {
+  render(filterItemContainer, new FilterInput(i).getElement(), true);
 }
 
 // main body components
 const mainContainer = mainBody.querySelector(`.page-main`);
 const tripEventsContainer = mainContainer.querySelector(`.trip-events`);
-render(tripEventsContainer, new SortContainer().getElement(), renderPosition.AFTERBEGIN);
-render(tripEventsContainer, new FirstTripEvent().getElement(), renderPosition.BEFOREEND);
-const sortInput = tripEventsContainer.querySelector(`.trip-sort__item--day`);
-
-for (let i = 0; i < sortObj.id.length; i++) {
-  render(sortInput, new SortItem(i).getElement(), `afterend`);
-}
-render(tripEventsContainer, new TripListContainer().getElement(), renderPosition.BEFOREEND);
+render(tripEventsContainer, new SortContainer().getElement());
+render(tripEventsContainer, new FirstTripEvent().getElement());
+render(tripEventsContainer, new TripListContainer().getElement());
 const tripDayList = tripEventsContainer.querySelector(`.trip-days`);
 for (let i = 0; i < TRIP_COUNT; i++) {
-  render(tripDayList, new TripDayList(i, trip[i]).getElement(), renderPosition.BEFOREEND);
+  render(tripDayList, new TripDayList(i, trip[i]).getElement());
 }
 const tripItem = tripDayList.querySelector(`.trip-events__list`);
 
@@ -82,7 +76,7 @@ const renderTrip = (tripItem, trip) => {
     replaceEditToTrip();
   });
 
-  render(tripItem, tripElement.getElement(), renderPosition.AFTERBEGIN);
+  render(tripItem, tripElement.getElement(), true);
 };
 
 for (let i = 0; i < TRIP_COUNT; i++) {
@@ -90,32 +84,32 @@ for (let i = 0; i < TRIP_COUNT; i++) {
 }
 
 const tripDetailsContainer = tripEventsContainer.querySelector(`.event--edit`);
-render(tripDetailsContainer, new TripDetails().getElement(), renderPosition.BEFOREEND);
+render(tripDetailsContainer, new TripDetails().getElement());
 const tripOfferSection = tripDetailsContainer.querySelector(`.event__section--offers`);
-render(tripOfferSection, new TripOffers().getElement(), renderPosition.BEFOREEND);
+render(tripOfferSection, new TripOffers().getElement());
 const tripDestignationSection = tripDetailsContainer.querySelector(`.event__section--destination`);
-render(tripDestignationSection, new TripDestignation().getElement(), renderPosition.BEFOREEND);
+render(tripDestignationSection, new TripDestignation().getElement());
 
 const tripEventsHeader = tripEventsContainer.querySelector(`.event__header`);
 const tripEventWrapper = tripEventsHeader.querySelector(`.event__type-wrapper`);
 const tripEventDestination = tripEventsHeader.querySelector(`.event__field-group--destination`);
 const tripEventTiming = tripEventsHeader.querySelector(`.event__field-group--time`);
 const tripEventPricing = tripEventsHeader.querySelector(`.event__field-group--price`);
-render(tripEventWrapper, new EventTypeIconSection().getElement(), renderPosition.AFTERBEGIN);
-render(tripEventDestination, new EventDestination().getElement(), renderPosition.AFTERBEGIN);
-render(tripEventTiming, new EventTime().getElement(), renderPosition.AFTERBEGIN);
-render(tripEventPricing, new EventPrice().getElement(), renderPosition.AFTERBEGIN);
+render(tripEventWrapper, new EventTypeIconSection().getElement(), true);
+render(tripEventDestination, new EventDestination().getElement(), true);
+render(tripEventTiming, new EventTime().getElement(), true);
+render(tripEventPricing, new EventPrice().getElement(), true);
 for (let i = 0; i < btnObj.type.length; i++) {
-  render(tripEventsHeader, new Buttons(i).getElement(), renderPosition.BEFOREEND);
+  render(tripEventsHeader, new Buttons(i).getElement());
 }
 const tripTransferList = tripEventWrapper.querySelector(`.event__type-list`);
-render(tripTransferList, new TransferList().getElement(), renderPosition.AFTERBEGIN);
+render(tripTransferList, new TransferList().getElement(), true);
 const transferItem = tripTransferList.querySelector(`.event__transfer`);
-for (let i = 0; i < transferObj.value.length; i++) {
-  render(transferItem, new TransferInput(i).getElement(), renderPosition.BEFOREEND);
+for (let i = 0; i < transferValue.length; i++) {
+  render(transferItem, new TransferInput(i).getElement());
 }
-render(tripTransferList, new RegistrationList().getElement(), renderPosition.BEFOREEND);
+render(tripTransferList, new RegistrationList().getElement());
 const registrationItem = tripTransferList.querySelector(`.event__registration`);
-for (let i = 0; i < registrationObj.value.length; i++) {
-  render(registrationItem, new RegistrationInput(i).getElement(), renderPosition.BEFOREEND);
+for (let i = 0; i < registrationText.length; i++) {
+  render(registrationItem, new RegistrationInput(i).getElement());
 }
