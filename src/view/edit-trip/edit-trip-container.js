@@ -1,4 +1,3 @@
-import {BLANK_TRIP} from "./../../const.js";
 import {createElement} from "./../../utils.js";
 
 const addOfferSelectors = (trip) => {
@@ -86,7 +85,7 @@ const addEditTripContainer = (trip) => {
 export default class EditTrip {
   constructor(trip) {
     this._element = null;
-    this._trip = trip || BLANK_TRIP;
+    this._trip = trip || null;
   }
 
   _getTemplate() {

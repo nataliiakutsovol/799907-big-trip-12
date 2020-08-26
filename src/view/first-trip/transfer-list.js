@@ -1,20 +1,16 @@
 import {createElement} from "./../../utils.js";
 
-const addTransferList = () => {
-  return (
-    `<fieldset class="event__type-group event__transfer">
-      <legend class="visually-hidden">Transfer</legend>
-    </fieldset>`
-  );
-};
-
 export default class TransferList {
   constructor() {
     this._element = null;
   }
 
   _getTemplate() {
-    return addTransferList();
+    return (
+      `<fieldset class="event__type-group event__transfer">
+        <legend class="visually-hidden">Transfer</legend>
+      </fieldset>`
+    );
   }
 
   getElement() {

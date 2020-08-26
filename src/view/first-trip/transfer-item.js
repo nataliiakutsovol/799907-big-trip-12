@@ -1,14 +1,5 @@
-import {transferObj} from "./../../const.js";
+import {transferValue} from "./../../const.js";
 import {createElement} from "./../../utils.js";
-
-const addTransferInput = (i) => {
-  return (
-    `<div class="event__type-item">
-      <input id="${transferObj.id[i]}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${transferObj.value[i]}">
-      <label class="event__type-label  ${transferObj.labelClass[i]}" for="${transferObj.id[i]}">${transferObj.text[i]}</label>
-    </div>`
-  );
-};
 
 export default class TransferInput {
   constructor(i) {
@@ -16,8 +7,13 @@ export default class TransferInput {
     this._i = i;
   }
 
-  _getTemplate() {
-    return addTransferInput(this._i);
+  _getTemplate(i) {
+    return (
+      `<div class="event__type-item">
+        <input id="event-type-${transferValue[i].toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${transferValue[i].toLowerCase()}">
+        <label class="event__type-label  event__type-label--${transferValue[i].toLowerCase()}" for="event-type-${transferValue[i].toLowerCase()}-1">${transferValue[i]}</label>
+      </div>`
+    );
   }
 
   getElement() {

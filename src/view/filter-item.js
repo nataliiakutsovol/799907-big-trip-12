@@ -1,15 +1,5 @@
 import {createElement} from "./../utils.js";
-import {filterObj} from "./../const.js";
-
-const addFilterInput = (i) => {
-
-  return (
-    `<div class="trip-filters__filter">
-      <input id="${filterObj.id[i]}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${filterObj.value[i]}" checked>
-      <label class="trip-filters__filter-label" for="${filterObj.id[i]}">${filterObj.text[i]}</label>
-    </div>`
-  );
-};
+import {filterValue} from "./../const.js";
 
 export default class FilterInput {
   constructor(i) {
@@ -17,8 +7,13 @@ export default class FilterInput {
     this._i = i;
   }
 
-  _getTemplate() {
-    return addFilterInput(this._i);
+  _getTemplate(i) {
+    return (
+      `<div class="trip-filters__filter">
+        <input id="filter-${filterValue[i]}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${filterValue[i]}" checked>
+        <label class="trip-filters__filter-label" for="filter-${filterValue[i]}">${filterValue[i].toUpperCase()}</label>
+      </div>`
+    );
   }
 
   getElement() {
