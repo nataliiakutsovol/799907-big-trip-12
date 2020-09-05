@@ -1,30 +1,18 @@
-import {createElement} from "./../utils.js";
 import {filterValue} from "./../const.js";
+import Abstract from "../abstract.js";
 
-export default class FilterInput {
+export default class FilterInput extends Abstract {
   constructor(i) {
-    this._element = null;
+    super();
     this._i = i;
   }
 
-  _getTemplate(i) {
+  _getTemplate() {
     return (
       `<div class="trip-filters__filter">
-        <input id="filter-${filterValue[i]}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${filterValue[i]}" checked>
-        <label class="trip-filters__filter-label" for="filter-${filterValue[i]}">${filterValue[i].toUpperCase()}</label>
+        <input id="filter-${filterValue[this._i]}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${filterValue[this._i]}" checked>
+        <label class="trip-filters__filter-label" for="filter-${filterValue[this._i]}">${filterValue[this._i]}</label>
       </div>`
     );
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate(this._i));
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

@@ -1,30 +1,18 @@
 import {registrationText} from "./../../const.js";
-import {createElement} from "./../../utils.js";
+import Abstract from "../../abstract.js";
 
-export default class RegistrationInput {
+export default class RegistrationInput extends Abstract {
   constructor(i) {
-    this._element = null;
+    super();
     this._i = i;
   }
 
-  _getTemplate(i) {
+  _getTemplate() {
     return (
       `<div class="event__type-item">
-        <input id="event-type-${registrationText[i].toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${registrationText[i].toLowerCase()}">
-        <label class="event__type-label  event__type-label--${registrationText[i].toLowerCase()}" for="event-type-${registrationText[i].toLowerCase()}-1">${registrationText[i]}</label>
+        <input id="event-type-${registrationText[this._i].toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${registrationText[this._i].toLowerCase()}">
+        <label class="event__type-label  event__type-label--${registrationText[this._i].toLowerCase()}" for="event-type-${registrationText[this._i].toLowerCase()}-1">${registrationText[this._i]}</label>
       </div>`
     );
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate(this._i));
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

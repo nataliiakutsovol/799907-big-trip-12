@@ -1,34 +1,30 @@
-import {createElement} from "./../../utils.js";
+import Abstract from "../../abstract.js";
+import Trip from "./trip-item";
+import TripBoard from "./../../presenter/trip-board";
 
-export default class TripDayList {
-  constructor(i, trip) {
-    this._element = null;
+export default class TripDayList extends Abstract {
+  constructor(i, items) {
+    super();
     this._i = i;
-    this._trip = trip;
+    this._items = items;
   }
 
-  _getTemplate(i, trip) {
-    const {date} = trip;
+  _getTemplate() {
+    // создать элементом верстку дня и на основе нее взять querySelector(".trip-events__list") и выполнить рендер в массиве this._items
     return (
       `<li class="trip-days__item  day">
         <div class="day__info">
-          <span class="day__counter">${i + 1}</span>
-          <time class="day__date" datetime="2019-03-18">${date.toLocaleString(`en-US`, {day: `numeric`, month: `short`})}</time>
+          <span class="day__counter">${this._i + 1}</span>
+          <time class="day__date" datetime="2019-03-18">${this._items[0].date.toLocaleString(`en-US`, {day: `numeric`, month: `short`})}</time>
         </div>
-        <ul class="trip-events__list"></ul>
+        <ul class="trip-events__list">
+        ${this._items.map((trip) => new TripBoard(trip)._renderTrip(trip)).join(` `)}
+        </ul>
       </li>`
     );
   }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate(this._i, this._trip));
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
 }
+
+// ${this._items.map(trip => new Trip(trip)._getTemplate()).join(` `)}
+
+// ${this._items.forEach(trip => new TripBoard(trip)._renderTrip(trip)).join(` `)}

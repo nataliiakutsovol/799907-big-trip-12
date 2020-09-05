@@ -1,9 +1,6 @@
-import {createElement} from "./../utils.js";
+import Abstract from "../abstract.js";
 
-export default class TripCounter {
-  constructor() {
-    this._element = null;
-  }
+export default class TripCounter extends Abstract {
 
   _getTemplate(counter) {
     counter = 11;
@@ -14,17 +11,5 @@ export default class TripCounter {
         </p>
       </section>`
     );
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

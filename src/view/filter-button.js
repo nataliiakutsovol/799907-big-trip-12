@@ -1,9 +1,6 @@
-import {createElement} from "./../utils.js";
+import Abstract from "../abstract.js";
 
-export default class AcceptFiltersBtn {
-  constructor() {
-    this._element = null;
-  }
+export default class AcceptFiltersBtn extends Abstract {
 
   _getTemplate(text) {
     text = `Accept filter`;
@@ -12,17 +9,5 @@ export default class AcceptFiltersBtn {
         <button class="visually-hidden" type="submit">${text}</button>
       </form>`
     );
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

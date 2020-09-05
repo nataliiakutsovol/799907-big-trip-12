@@ -1,9 +1,6 @@
-import {createElement} from "./../../utils.js";
+import Abstract from "../../abstract.js";
 
-export default class EventTime {
-  constructor() {
-    this._element = null;
-  }
+export default class EventTime extends Abstract {
 
   _getTemplate() {
     return (
@@ -15,15 +12,4 @@ export default class EventTime {
     );
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
 }

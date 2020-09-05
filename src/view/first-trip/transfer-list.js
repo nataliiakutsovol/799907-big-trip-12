@@ -1,9 +1,6 @@
-import {createElement} from "./../../utils.js";
+import Abstract from "../../abstract.js";
 
-export default class TransferList {
-  constructor() {
-    this._element = null;
-  }
+export default class TransferList extends Abstract {
 
   _getTemplate() {
     return (
@@ -11,17 +8,5 @@ export default class TransferList {
         <legend class="visually-hidden">Transfer</legend>
       </fieldset>`
     );
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

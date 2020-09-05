@@ -1,9 +1,6 @@
-import {createElement} from "./../../utils.js";
+import Abstract from "../../abstract.js";
 
-export default class TripDetails {
-  constructor() {
-    this._element = null;
-  }
+export default class TripDetails extends Abstract {
 
   _getTemplate() {
     return (
@@ -16,17 +13,5 @@ export default class TripDetails {
         <h3 class="event__section-title  event__section-title--destination">Destination</h3>
       </section>`
     );
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

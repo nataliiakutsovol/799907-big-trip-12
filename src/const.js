@@ -1,4 +1,4 @@
-export const TRIP_COUNT = 7;
+export const TRIP_COUNT = 17;
 
 export const offerDescription = [{
   name: `Add luggage`,
@@ -25,4 +25,10 @@ export const btnObj = {
   text: [`Save`, `Cancel`],
   type: [`submit`, `reset`],
   btnClass: [`event__save-btn  btn  btn--blue`, `event__reset-btn`]
+};
+
+export const SortType = {
+  EVENT: `event`,
+  TIME: `time`,
+  PRICE: `price`
 };

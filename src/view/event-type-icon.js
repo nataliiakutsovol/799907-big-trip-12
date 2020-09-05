@@ -1,10 +1,7 @@
 
-import {createElement} from "./../utils.js";
+import Abstract from "../abstract.js";
 
-export default class EventTypeIconSection {
-  constructor() {
-    this._element = null;
-  }
+export default class EventTypeIconSection extends Abstract {
 
   _getTemplate() {
     return (
@@ -17,17 +14,5 @@ export default class EventTypeIconSection {
       <div class="event__type-list"></div>
       </div>`
     );
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

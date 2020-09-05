@@ -1,9 +1,6 @@
-import {createElement} from "./../../utils.js";
+import Abstract from "../../abstract.js";
 
-export default class EventPrice {
-  constructor() {
-    this._element = null;
-  }
+export default class EventPrice extends Abstract {
 
   _getTemplate() {
     return (
@@ -13,17 +10,5 @@ export default class EventPrice {
       </label>
       <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value=""></div>`
     );
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
