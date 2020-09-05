@@ -1,4 +1,4 @@
-import {getRandomInteger} from "../utils.js";
+import {getRandomInteger} from "../utils/common.js";
 import {offerDescription} from "../const.js";
 
 const generateIcons = () => {
@@ -52,7 +52,8 @@ const generateDate = () => {
   const daysGap = getRandomInteger(-maxDaysGap, maxDaysGap);
 
   const currentDate = new Date();
-  currentDate.setHours(23, 59, 59, 999);
+  // TODO: RANDOMIZE TIME
+  currentDate.setHours(getRandomInteger(0, 24), 59, 59, 999);
   currentDate.setDate(currentDate.getDate() + daysGap);
 
   return new Date(currentDate);

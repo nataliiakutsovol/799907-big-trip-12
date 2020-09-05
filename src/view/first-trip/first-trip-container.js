@@ -1,9 +1,6 @@
-import {createElement} from "./../../utils.js";
+import Abstract from "../../abstract.js";
 
-export default class FirstTripEvent {
-  constructor() {
-    this._element = null;
-  }
+export default class FirstTripEvent extends Abstract {
 
   _getTemplate() {
     return (
@@ -20,17 +17,5 @@ export default class FirstTripEvent {
         </header>
       </form>`
     );
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

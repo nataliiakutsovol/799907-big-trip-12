@@ -1,4 +1,4 @@
-import {createElement} from "./../../utils.js";
+import Abstract from "../../abstract.js";
 
 const addOfferSelectors = (trip) => {
   const {offers} = trip;
@@ -82,25 +82,24 @@ const addEditTripContainer = (trip) => {
   );
 };
 
-export default class EditTrip {
+export default class EditTrip extends Abstract {
   constructor(trip) {
-    this._element = null;
+    super();
     this._trip = trip || null;
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
   }
 
   _getTemplate() {
     return addEditTripContainer(this._trip);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate(this._trip));
-    }
-
-    return this._element;
+  _formSubmitHandler(evt) {
+    evt.preventDefault();
+    this._callback.onSubmit();
   }
 
-  removeElement() {
-    this._element = null;
+  setSubmitClickHandler(callback) {
+    this._callback.onSubmit = callback;
+    this.getElement().querySelector(`.event__save-btn`).addEventListener(`submit`, this._formSubmitHandler);
   }
 }

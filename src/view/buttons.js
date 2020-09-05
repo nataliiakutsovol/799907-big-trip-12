@@ -1,27 +1,15 @@
-import {createElement} from "./../utils.js";
 import {btnObj} from "./../const.js";
+import Abstract from "../abstract.js";
 
-export default class Buttons {
+export default class Buttons extends Abstract {
   constructor(i) {
-    this._element = null;
+    super();
     this._i = i;
   }
 
-  _getTemplate(i) {
+  _getTemplate() {
     return (
-      `<button class="${btnObj.btnClass[i]}" type="${btnObj.type[i]}">${btnObj.text[i]}</button>`
+      `<button class="${btnObj.btnClass[this._i]}" type="${btnObj.type[this._i]}">${btnObj.text[this._i]}</button>`
     );
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate(this._i));
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

@@ -1,4 +1,4 @@
-import {createElement} from "./../../utils.js";
+import Abstract from "../../abstract.js";
 
 const addOfferSelectors = (trip) => {
   const {offers} = trip;
@@ -48,25 +48,24 @@ const addTripItem = (trip) => {
   );
 };
 
-export default class Trip {
+export default class Trip extends Abstract {
   constructor(trip) {
-    this._element = null;
+    super();
     this._trip = trip;
+    this._editClickHandler = this._editClickHandler.bind(this);
   }
 
   _getTemplate() {
     return addTripItem(this._trip);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate(this._trip));
-    }
-
-    return this._element;
+  _editClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.editClick();
   }
 
-  removeElement() {
-    this._element = null;
+  setEditTripClickHandler(callback) {
+    this._callback.editClick = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._editClickHandler);
   }
 }

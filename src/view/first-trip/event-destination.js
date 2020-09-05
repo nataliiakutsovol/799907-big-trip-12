@@ -1,9 +1,6 @@
-import {createElement} from "./../../utils.js";
+import Abstract from "../../abstract.js";
 
-export default class EventDestination {
-  constructor() {
-    this._element = null;
-  }
+export default class EventDestination extends Abstract {
 
   _getTemplate() {
     return (
@@ -16,17 +13,5 @@ export default class EventDestination {
         <option value="Saint Petersburg"></option>
       </datalist></div>`
     );
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
