@@ -34,6 +34,7 @@ export default class TripBoard {
 
   _sortTrips(SortType) {
     switch (sortType) {
+        
       case SortType.EVENT:
         this._boardTrips.sort(sortTripByEvent);
         break;
