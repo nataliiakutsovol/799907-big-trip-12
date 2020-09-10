@@ -1,8 +1,5 @@
 import HeaderContainer from './../view/header-container.js';
 import MainContainer from './../view/main-container.js';
-
-import Menu from './../view/menu.js';
-import FilterInput from './../view/filter-item.js';
 import SortContainer from './../view/sorting-container.js';
 import FirstTripEvent from './../view/first-trip/first-trip-container.js';
 import TripListContainer from './../view/trip/trip-list-container.js';
@@ -20,7 +17,6 @@ export default class TripBoard {
     this._SortingContainer = new SortContainer();
     this._FirstTripContainer = new FirstTripEvent();
     this._TripListContainer = new TripListContainer();
-
     this._currentSortType = SortType.EVENT;
   }
 
@@ -32,22 +28,21 @@ export default class TripBoard {
     this._tripBoard();
   }
 
-  _sortTrips(SortType) {
-    switch (sortType) {
-        
-      case SortType.EVENT:
-        this._boardTrips.sort(sortTripByEvent);
-        break;
-      case SortType.TIME:
-        this._boardTrips.sort(sortTripByTime);
-        break;
-      case SortType.PRICE:
-        this._boardTrips.sort(sortTripByPrice);
-        break;
-      default:
-        this.__boardTrips = this._sourcedBoardTrips.slice();
-    }
-  }
+  // _sortTrips(SortType) {
+  //   switch (sortType) {
+  //     case SortType.EVENT:
+  //       this._boardTrips.sort(sortTripByEvent);
+  //       break;
+  //     case SortType.TIME:
+  //       this._boardTrips.sort(sortTripByTime);
+  //       break;
+  //     case SortType.PRICE:
+  //       this._boardTrips.sort(sortTripByPrice);
+  //       break;
+  //     default:
+  //       this.__boardTrips = this._sourcedBoardTrips.slice();
+  //   }
+  // }
 
   _handleSortTypeChange(sortType) {
     if (this._currentSortType === sortType) {
@@ -66,7 +61,6 @@ export default class TripBoard {
 
   _clearTripListItems() {
     this._TripListContainer.getElement().innerHTML = ``;
-    this._renderedTaskCount = TRIP_COUNT;
   }
 
   _renderFirstTrip() {
@@ -77,25 +71,31 @@ export default class TripBoard {
     render(this._SortingContainer, this._TripListContainer);
   }
 
-  _renderTripDayList(i, dayTrips) {
-    const tripDayList = new TripDayList(i, dayTrips);
-    render(this._TripListContainer, tripDayList);
+  _renderTripDayList(i, dayTrips, tripDayList) {
+    const daysList = new TripDayList(i, dayTrips);
+    tripDayList = daysList.getElement().querySelector(`ul.trip-events__list`);
+
+    render(this._TripListContainer, daysList);
+
+    dayTrips.forEach((dayTrip, i) => {
+      this._renderTrip(tripDayList, i, dayTrip);
+    });
   }
 
   _renderTripListItems() {
-    const dates = Array.from(new Set(this._boardTrips.map(trip => new Date(trip.date).setHours(0, 0, 0, 0)).sort()));
+    const dates = Array.from(new Set(this._boardTrips.map((trip) => new Date(trip.date).setHours(0, 0, 0, 0)).sort()));
     dates.forEach((day, i) => {
       const dayTrips = this._boardTrips.filter((trip) => {
-        return trip.date.getTime() >= day && trip.date.getTime() <= day + 1000 * 60 * 60 * 24;
+        return (trip.date.getTime() >= day && trip.date.getTime() <= day + 1000 * 60 * 60 * 24);
       });
       this._renderTripDayList(i, dayTrips);
     });
   }
 
-  _renderTrip(trip) {
+  _renderTrip(tripDayList, i, trip) {
     const tripElement = new Trip(trip);
+
     const tripEditElement = new EditTrip(trip);
-    const tripItem = this._mainBody.querySelector(`.trip-events__list`);
 
     const replaceTripToEdit = () => {
       replace(tripEditElement, tripElement);
@@ -121,20 +121,14 @@ export default class TripBoard {
       }
     };
 
-    render(tripItem, tripElement, true);
-  }
+    render(tripDayList, tripElement, true);
 
-  //   _renderTripItems(from, to) {
-  //     this._boardTrips
-  //       .slice(from, to)
-  //       .forEach((boardTrip) => this._renderTrip(boardTrip));
-  //   }
+  }
 
   _tripBoard() {
     this._renderSorting();
     this._renderFirstTrip();
     this._renderTripDayListContainer();
     this._renderTripListItems(0, Math.min(this._boardTrips.length, TRIP_COUNT));
-    // this._renderTripItems()
   }
 }
