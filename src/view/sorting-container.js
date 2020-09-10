@@ -1,4 +1,4 @@
-import {sortId, SortType} from "./../const.js";
+import {sortId} from "./../const.js";
 import Abstract from "../abstract.js";
 
 const addSortingItem = () => {
