@@ -11,7 +11,7 @@ const addOfferSelectors = (trip) => {
 };
 
 const addTripItem = (trip) => {
-  const {icons, transport, city, time, price} = trip;
+  const {icons, transport, city, timeStart, timeEnd, price} = trip;
   const offerDescriptionTemplate = addOfferSelectors(trip);
   return (
     `<li class="trip-events__item">
@@ -23,9 +23,9 @@ const addTripItem = (trip) => {
 
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${time}">${time}</time>
+            <time class="event__start-time" datetime="${timeStart}">${timeStart}</time>
             &mdash;
-            <time class="event__end-time" datetime="${time}">${time}</time>
+            <time class="event__end-time" datetime="${timeEnd}">${timeEnd}</time>
           </p>
           <p class="event__duration">1H 35M</p>
         </div>

@@ -1,4 +1,5 @@
 import Abstract from "../../abstract.js";
+import {cities} from "../../const.js";
 
 const addOfferSelectors = (trip) => {
   const {offers} = trip;
@@ -13,9 +14,15 @@ const addOfferSelectors = (trip) => {
     </div>`).join(``);
 };
 
-const addEditTripContainer = (trip) => {
-  const {transport, city, date, time, price} = trip;
+const addCitiesList = () => {
+  return cities.map((city) =>
+    `<option value="${city}"></option>`).join(``);
+};
+
+const addEditTripContainer = (trip, i) => {
+  const {transport, city, date, timeStart, timeEnd, price} = trip;
   const offerDescriptionTemplate = addOfferSelectors(trip);
+  const citiesListTemplate = addCitiesList(i);
   return (
     `<form class="event  event--edit">
     <header class="event__header">
@@ -27,9 +34,7 @@ const addEditTripContainer = (trip) => {
         </label>
         <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city}" list="destination-list-1">
         <datalist id="destination-list-1">
-          <option value="Amsterdam"></option>
-          <option value="Geneva"></option>
-          <option value="Chamonix"></option>
+        ${citiesListTemplate}
         </datalist>
       </div>
 
@@ -37,12 +42,12 @@ const addEditTripContainer = (trip) => {
         <label class="visually-hidden" for="event-start-time-1">
           From
         </label>
-        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${date.toLocaleString(`en-US`, {day: `numeric`, month: `numeric`, year: `2-digit`})} ${time}">
+        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${date.toLocaleString(`en-US`, {day: `numeric`, month: `numeric`, year: `2-digit`})} ${timeStart}">
         &mdash;
         <label class="visually-hidden" for="event-end-time-1">
           To
         </label>
-        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${date.toLocaleString(`en-US`, {day: `numeric`, month: `numeric`, year: `2-digit`})} ${time}">
+        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${date.toLocaleString(`en-US`, {day: `numeric`, month: `numeric`, year: `2-digit`})} ${timeEnd}">
       </div>
 
       <div class="event__field-group  event__field-group--price">
@@ -83,14 +88,15 @@ const addEditTripContainer = (trip) => {
 };
 
 export default class EditTrip extends Abstract {
-  constructor(trip) {
+  constructor(trip, i) {
     super();
+    this._i = i;
     this._trip = trip || null;
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
   }
 
   _getTemplate() {
-    return addEditTripContainer(this._trip);
+    return addEditTripContainer(this._trip, this._i);
   }
 
   _formSubmitHandler(evt) {

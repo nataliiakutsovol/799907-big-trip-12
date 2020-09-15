@@ -35,12 +35,8 @@ const generatePrice = () => {
 
 const generateTimeRange = () => {
 
-  const maxDaysGap = 7;
-
-  const daysGap = getRandomInteger(-maxDaysGap, maxDaysGap);
-
   const currentDate = new Date();
-  currentDate.setDate(currentDate.getDate() + daysGap);
+  currentDate.setHours(getRandomInteger(0, 24), (0, 59), (0, 59), 999);
 
   return new Date(currentDate).toLocaleString(`en-US`, {hour: `numeric`, minute: `numeric`});
 };
@@ -52,7 +48,6 @@ const generateDate = () => {
   const daysGap = getRandomInteger(-maxDaysGap, maxDaysGap);
 
   const currentDate = new Date();
-  // TODO: RANDOMIZE TIME
   currentDate.setHours(getRandomInteger(0, 24), 59, 59, 999);
   currentDate.setDate(currentDate.getDate() + daysGap);
 
@@ -66,16 +61,20 @@ const generateOffers = () => {
   return offerDescription[randomIndex];
 };
 
+const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
+
 const MAX_OFFERS = getRandomInteger(0, 3);
 
 export const generateTrip = () => {
   const offerArr = new Array(MAX_OFFERS).fill().map(generateOffers);
   return {
+    id: generateId(),
     icons: generateIcons(),
     transport: generateTransport(),
     city: generateCity(),
     date: generateDate(),
-    time: generateTimeRange(),
+    timeStart: generateTimeRange(),
+    timeEnd: generateTimeRange(),
     price: generatePrice(),
     offers: offerArr,
   };

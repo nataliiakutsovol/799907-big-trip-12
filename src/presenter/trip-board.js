@@ -4,10 +4,9 @@ import SortContainer from './../view/sorting-container.js';
 import FirstTripEvent from './../view/first-trip/first-trip-container.js';
 import TripListContainer from './../view/trip/trip-list-container.js';
 import TripDayList from './../view/trip/trip-day-list.js';
-import Trip from './../view/trip/trip-item.js';
-import EditTrip from './../view/edit-trip/edit-trip-container.js';
-import {render, replace} from './../utils/render.js';
+import {render} from './../utils/render.js';
 import {TRIP_COUNT, SortType} from './../const.js';
+import TripPresenter from "./trip";
 
 export default class TripBoard {
   constructor(mainBody) {
@@ -90,39 +89,12 @@ export default class TripBoard {
       });
       this._renderTripDayList(i, dayTrips);
     });
+
   }
 
   _renderTrip(tripDayList, i, trip) {
-    const tripElement = new Trip(trip);
-
-    const tripEditElement = new EditTrip(trip);
-
-    const replaceTripToEdit = () => {
-      replace(tripEditElement, tripElement);
-    };
-
-    const replaceEditToTrip = () => {
-      replace(tripElement, tripEditElement);
-    };
-
-    tripElement.setEditTripClickHandler(() => {
-      replaceTripToEdit();
-    });
-
-    tripEditElement.setSubmitClickHandler(() => {
-      replaceEditToTrip();
-    });
-
-    const onEscKeyDown = (evt) => {
-      if (evt.key === `Escape` || evt.key === `Esc`) {
-        evt.preventDefault();
-        replaceEditToTrip();
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      }
-    };
-
-    render(tripDayList, tripElement, true);
-
+    const tripPresenter = new TripPresenter(tripDayList);
+    tripPresenter.init(trip);
   }
 
   _tripBoard() {

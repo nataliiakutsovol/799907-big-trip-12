@@ -21,6 +21,8 @@ export const transferValue = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Driv
 
 export const registrationText = [`Check-in`, `Sightseeing`, `Restaurant`];
 
+export const cities = [`Rome`, `New York`, `Milan`, `Paris`, `Berlin`];
+
 export const btnObj = {
   text: [`Save`, `Cancel`],
   type: [`submit`, `reset`],
