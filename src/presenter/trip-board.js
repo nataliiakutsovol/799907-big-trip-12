@@ -21,6 +21,7 @@ export default class TripBoard {
     this._tripPresenter = {};
 
     this._handleTripChange = this._handleTripChange.bind(this);
+    this._handleModeChange = this._handleModeChange.bind(this);
   }
 
   init(boardTrips) {
@@ -29,6 +30,12 @@ export default class TripBoard {
     render(this._mainBody, this._MainContainer, true);
     render(this._mainBody, this._HeaderContainer, true);
     this._tripBoard();
+  }
+
+  _handleModeChange() {
+    Object
+      .values(this._tripPresenter)
+      .forEach((presenter) => presenter.resetView());
   }
 
   _handleTripChange(updatedTrip) {

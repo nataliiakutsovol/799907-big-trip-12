@@ -1,4 +1,4 @@
-import Abstract from "./abstract";
+import Abstract from "./../abstract";
 
 export default class Smart extends Abstract {
   constructor() {
@@ -19,7 +19,7 @@ export default class Smart extends Abstract {
 
     if (justDataUpdating) {
       return;
-    }
+   }
 
     this.updateElement();
   }
@@ -31,5 +31,11 @@ export default class Smart extends Abstract {
     const newElement = this.getElement();
     parent.replaceChild(newElement, prevElement);
     prevElement = null;
+
+    this.restoreHandlers();
+  }
+
+  restoreHandlers() {
+    throw new Error(`Abstract method not implemented: resetHandlers`);
   }
 }

@@ -1,8 +1,8 @@
-import Abstract from "../../abstract.js";
+import Smart from "./../smart";
 import {cities} from "../../const.js";
 
-const addOfferSelectors = (trip) => {
-  const {offers} = trip;
+const addOfferSelectors = (data) => {
+  const {offers} = data;
   return offers.map((offer) =>
     `<div class="event__offer-selector">
       <input class="event__offer-checkbox  visually-hidden" id="event-offer-train-1" type="checkbox" name="event-offer-train">
@@ -19,9 +19,9 @@ const addCitiesList = () => {
     `<option value="${city}"></option>`).join(``);
 };
 
-const addEditTripContainer = (trip, i) => {
-  const {transport, city, date, timeStart, timeEnd, price} = trip;
-  const offerDescriptionTemplate = addOfferSelectors(trip);
+const addEditTripContainer = (data, i) => {
+  const {transport, city, isDate, timeStart, timeEnd, price} = data;
+  const offerDescriptionTemplate = addOfferSelectors(data);
   const citiesListTemplate = addCitiesList(i);
   return (
     `<form class="event  event--edit">
@@ -42,12 +42,12 @@ const addEditTripContainer = (trip, i) => {
         <label class="visually-hidden" for="event-start-time-1">
           From
         </label>
-        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${date.toLocaleString(`en-US`, {day: `numeric`, month: `numeric`, year: `2-digit`})} ${timeStart}">
+        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${isDate.toLocaleString(`en-US`, {day: `numeric`, month: `numeric`, year: `2-digit`})} ${timeStart}">
         &mdash;
         <label class="visually-hidden" for="event-end-time-1">
           To
         </label>
-        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${date.toLocaleString(`en-US`, {day: `numeric`, month: `numeric`, year: `2-digit`})} ${timeEnd}">
+        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${isDate.toLocaleString(`en-US`, {day: `numeric`, month: `numeric`, year: `2-digit`})} ${timeEnd}">
       </div>
 
       <div class="event__field-group  event__field-group--price">
@@ -87,17 +87,79 @@ const addEditTripContainer = (trip, i) => {
   );
 };
 
-export default class EditTrip extends Abstract {
-  constructor(trip, i) {
+export default class EditTrip extends Smart {
+  constructor(trip = null, i) {
     super();
     this._i = i;
-    this._trip = trip || null;
-    this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._data = EditTrip.parseTripToData(trip);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._dateToggleHandler = this._dateToggleHandler.bind(this);
+    this._priceInputHandler = this._priceInputHandler.bind(this);
+    this._setInnerHandlers();
+  }
+
+  reset(trip) {
+    this.updateData(EditTrip.parseTripToData(trip));
   }
 
   _getTemplate() {
-    return addEditTripContainer(this._trip, this._i);
+    return addEditTripContainer(this._data, this._i);
+  }
+
+  static parseTripToData(trip) {
+    return Object.assign(
+        {},
+        trip,
+        {
+          isDate: trip.date,  
+        }   
+    );
+  }
+
+  static parseDataToTrip(data) {
+
+    data = Object.assign({}, data);
+
+    if (!data.isDate) {
+      data.date = null;
+    }
+
+    delete data.isDate;
+
+    return data;
+  }
+
+  _dateToggleHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      isDate: !this._data.isDate
+    });
+  }
+
+  restoreHandlers() {
+    this._setInnerHandlers();
+    this.setSubmitClickHandler(this._callback.onSubmit);
+  }
+
+  _setInnerHandlers() {
+    this.getElement().querySelector(`.event__input--time`).addEventListener(`click`, this._dateToggleHandler);
+    this.getElement().querySelector(`.event__input--destination`).addEventListener(`input`, this._cityInputHandler);
+    this.getElement().querySelector(`.event__input--price`).addEventListener(`input`, this._priceInputHandler);
+  }
+
+  _cityInputHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      city: evt.target.value
+    }, true);
+  }
+
+  _priceInputHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      price: evt.target.value
+    }, true);
   }
 
   _favoriteClickHandler(evt) {
@@ -112,7 +174,7 @@ export default class EditTrip extends Abstract {
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.onSubmit(this._trip);
+    this._callback.onSubmit(EditTrip.parseDataToTrip(this._data));
   }
 
   setSubmitClickHandler(callback) {
