@@ -5,8 +5,9 @@ import FirstTripEvent from './../view/first-trip/first-trip-container.js';
 import TripListContainer from './../view/trip/trip-list-container.js';
 import TripDayList from './../view/trip/trip-day-list.js';
 import {render} from './../utils/render.js';
+import {updateItem} from './../utils/common';
 import {TRIP_COUNT, SortType} from './../const.js';
-import TripPresenter from "./trip";
+import TripPresenter from './trip';
 
 export default class TripBoard {
   constructor(mainBody) {
@@ -17,6 +18,9 @@ export default class TripBoard {
     this._FirstTripContainer = new FirstTripEvent();
     this._TripListContainer = new TripListContainer();
     this._currentSortType = SortType.EVENT;
+    this._tripPresenter = {};
+
+    this._handleTripChange = this._handleTripChange.bind(this);
   }
 
   init(boardTrips) {
@@ -25,6 +29,12 @@ export default class TripBoard {
     render(this._mainBody, this._MainContainer, true);
     render(this._mainBody, this._HeaderContainer, true);
     this._tripBoard();
+  }
+
+  _handleTripChange(updatedTrip) {
+    this._boardTrips = updateItem(this._boardTrips, updatedTrip);
+    this._sourcedBoardTrips = updateItem(this._sourcedBoardTrips, updatedTrip);
+    this._tripPresenter[updatedTrip.id].init(updatedTrip);
   }
 
   // _sortTrips(SortType) {
@@ -50,16 +60,12 @@ export default class TripBoard {
 
     this._sortTrips(sortType);
     this._clearTripList();
-    this._renderTripListItems();
+    this._renderTripItemsList();
   }
 
   _renderSorting() {
     render(this._MainContainer, this._SortingContainer);
     this._SortingContainer.setSortTypeChangeHandler(this._handleSortTypeChange);
-  }
-
-  _clearTripListItems() {
-    this._TripListContainer.getElement().innerHTML = ``;
   }
 
   _renderFirstTrip() {
@@ -73,7 +79,6 @@ export default class TripBoard {
   _renderTripDayList(i, dayTrips, tripDayList) {
     const daysList = new TripDayList(i, dayTrips);
     tripDayList = daysList.getElement().querySelector(`ul.trip-events__list`);
-
     render(this._TripListContainer, daysList);
 
     dayTrips.forEach((dayTrip, i) => {
@@ -81,7 +86,7 @@ export default class TripBoard {
     });
   }
 
-  _renderTripListItems() {
+  _renderTripItemsList() {
     const dates = Array.from(new Set(this._boardTrips.map((trip) => new Date(trip.date).setHours(0, 0, 0, 0)).sort()));
     dates.forEach((day, i) => {
       const dayTrips = this._boardTrips.filter((trip) => {
@@ -93,14 +98,20 @@ export default class TripBoard {
   }
 
   _renderTrip(tripDayList, i, trip) {
-    const tripPresenter = new TripPresenter(tripDayList);
+    const tripPresenter = new TripPresenter(tripDayList, this._handleTripChange);
     tripPresenter.init(trip);
+    this._tripPresenter[trip.id] = tripPresenter;
+  }
+
+  _clearTripList() {
+    Object.values(this._tripPresenter).forEach((presenter) => presenter.destroy());
+    this._tripPresenter = {};
   }
 
   _tripBoard() {
     this._renderSorting();
     this._renderFirstTrip();
     this._renderTripDayListContainer();
-    this._renderTripListItems(0, Math.min(this._boardTrips.length, TRIP_COUNT));
+    this._renderTripItemsList(0, Math.min(this._boardTrips.length, TRIP_COUNT));
   }
 }

@@ -77,5 +77,6 @@ export const generateTrip = () => {
     timeEnd: generateTimeRange(),
     price: generatePrice(),
     offers: offerArr,
+    isFavorite: Boolean(getRandomInteger(0, 1)),
   };
 };

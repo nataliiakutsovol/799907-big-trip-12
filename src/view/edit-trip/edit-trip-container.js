@@ -61,7 +61,7 @@ const addEditTripContainer = (trip, i) => {
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
       <button class="event__reset-btn" type="reset">Delete</button>
 
-      <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" checked>
+      <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite">
       <label class="event__favorite-btn" for="event-favorite-1">
         <span class="visually-hidden">Add to favorite</span>
         <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
@@ -93,15 +93,26 @@ export default class EditTrip extends Abstract {
     this._i = i;
     this._trip = trip || null;
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
   }
 
   _getTemplate() {
     return addEditTripContainer(this._trip, this._i);
   }
 
+  _favoriteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.favoriteClick();
+  }
+
+  setFavoriteClickHandler(callback) {
+    this._callback.favoriteClick = callback;
+    this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, this._favoriteClickHandler);
+  }
+
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.onSubmit();
+    this._callback.onSubmit(this._trip);
   }
 
   setSubmitClickHandler(callback) {
