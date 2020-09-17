@@ -88,7 +88,7 @@ export default class TripBoard {
     tripDayList = daysList.getElement().querySelector(`ul.trip-events__list`);
     render(this._TripListContainer, daysList);
 
-    dayTrips.forEach((dayTrip, i) => {
+    dayTrips.forEach((dayTrip) => {
       this._renderTrip(tripDayList, i, dayTrip);
     });
   }
