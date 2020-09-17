@@ -20,7 +20,7 @@ const addCitiesList = () => {
 };
 
 const addEditTripContainer = (data, i) => {
-  const {transport, city, isDate, timeStart, timeEnd, price} = data;
+  const {transport, city, isDate, timeStart, timeEnd, price, isFavorite} = data;
   const offerDescriptionTemplate = addOfferSelectors(data);
   const citiesListTemplate = addCitiesList(i);
   return (
@@ -61,7 +61,7 @@ const addEditTripContainer = (data, i) => {
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
       <button class="event__reset-btn" type="reset">Delete</button>
 
-      <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite">
+      <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${isFavorite == true ? `checked` : ` `}>
       <label class="event__favorite-btn" for="event-favorite-1">
         <span class="visually-hidden">Add to favorite</span>
         <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
@@ -95,6 +95,7 @@ export default class EditTrip extends Smart {
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._dateToggleHandler = this._dateToggleHandler.bind(this);
+    this._cityInputHandler = this._cityInputHandler.bind(this);
     this._priceInputHandler = this._priceInputHandler.bind(this);
     this._setInnerHandlers();
   }
@@ -179,6 +180,7 @@ export default class EditTrip extends Smart {
 
   setSubmitClickHandler(callback) {
     this._callback.onSubmit = callback;
-    this.getElement().querySelector(`.event__save-btn`).addEventListener(`submit`, this._formSubmitHandler);
+    this.getElement()
+    .addEventListener(`submit`, this._formSubmitHandler);
   }
 }
