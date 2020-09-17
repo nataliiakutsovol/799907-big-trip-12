@@ -1,11 +1,11 @@
-export const sortTripByEvent = (tripA, tripB) => {
+export const sortTripByEvent = () => {
 
 };
 
-export const sortTripByTime = (tripA, tripB) => {
+export const sortTripByTime = () => {
 
 };
 
-export const sortTripByPrice = (tripA, tripB) => {
+export const sortTripByPrice = () => {
 
 };

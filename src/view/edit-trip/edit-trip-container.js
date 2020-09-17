@@ -1,7 +1,8 @@
-import Abstract from "../../abstract.js";
+import Smart from "./../smart";
+import {cities} from "../../const.js";
 
-const addOfferSelectors = (trip) => {
-  const {offers} = trip;
+const addOfferSelectors = (data) => {
+  const {offers} = data;
   return offers.map((offer) =>
     `<div class="event__offer-selector">
       <input class="event__offer-checkbox  visually-hidden" id="event-offer-train-1" type="checkbox" name="event-offer-train">
@@ -13,9 +14,15 @@ const addOfferSelectors = (trip) => {
     </div>`).join(``);
 };
 
-const addEditTripContainer = (trip) => {
-  const {transport, city, date, time, price} = trip;
-  const offerDescriptionTemplate = addOfferSelectors(trip);
+const addCitiesList = () => {
+  return cities.map((city) =>
+    `<option value="${city}"></option>`).join(``);
+};
+
+const addEditTripContainer = (data, i) => {
+  const {transport, city, isDate, timeStart, timeEnd, price, isFavorite} = data;
+  const offerDescriptionTemplate = addOfferSelectors(data);
+  const citiesListTemplate = addCitiesList(i);
   return (
     `<form class="event  event--edit">
     <header class="event__header">
@@ -27,9 +34,7 @@ const addEditTripContainer = (trip) => {
         </label>
         <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city}" list="destination-list-1">
         <datalist id="destination-list-1">
-          <option value="Amsterdam"></option>
-          <option value="Geneva"></option>
-          <option value="Chamonix"></option>
+        ${citiesListTemplate}
         </datalist>
       </div>
 
@@ -37,12 +42,12 @@ const addEditTripContainer = (trip) => {
         <label class="visually-hidden" for="event-start-time-1">
           From
         </label>
-        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${date.toLocaleString(`en-US`, {day: `numeric`, month: `numeric`, year: `2-digit`})} ${time}">
+        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${isDate.toLocaleString(`en-US`, {day: `numeric`, month: `numeric`, year: `2-digit`})} ${timeStart}">
         &mdash;
         <label class="visually-hidden" for="event-end-time-1">
           To
         </label>
-        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${date.toLocaleString(`en-US`, {day: `numeric`, month: `numeric`, year: `2-digit`})} ${time}">
+        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${isDate.toLocaleString(`en-US`, {day: `numeric`, month: `numeric`, year: `2-digit`})} ${timeEnd}">
       </div>
 
       <div class="event__field-group  event__field-group--price">
@@ -56,7 +61,7 @@ const addEditTripContainer = (trip) => {
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
       <button class="event__reset-btn" type="reset">Delete</button>
 
-      <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" checked>
+      <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${isFavorite === true ? `checked` : ` `}>
       <label class="event__favorite-btn" for="event-favorite-1">
         <span class="visually-hidden">Add to favorite</span>
         <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
@@ -82,24 +87,100 @@ const addEditTripContainer = (trip) => {
   );
 };
 
-export default class EditTrip extends Abstract {
-  constructor(trip) {
+export default class EditTrip extends Smart {
+  constructor(trip = null, i) {
     super();
-    this._trip = trip || null;
+    this._i = i;
+    this._data = EditTrip.parseTripToData(trip);
+    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._dateToggleHandler = this._dateToggleHandler.bind(this);
+    this._cityInputHandler = this._cityInputHandler.bind(this);
+    this._priceInputHandler = this._priceInputHandler.bind(this);
+    this._setInnerHandlers();
+  }
+
+  reset(trip) {
+    this.updateData(EditTrip.parseTripToData(trip));
   }
 
   _getTemplate() {
-    return addEditTripContainer(this._trip);
+    return addEditTripContainer(this._data, this._i);
+  }
+
+  static parseTripToData(trip) {
+    return Object.assign(
+        {},
+        trip,
+        {
+          isDate: trip.date,
+        }
+    );
+  }
+
+  static parseDataToTrip(data) {
+
+    data = Object.assign({}, data);
+
+    if (!data.isDate) {
+      data.isDate = null;
+    }
+
+    delete data.isDate;
+
+    return data;
+  }
+
+  _dateToggleHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      isDate: !this._data.isDate
+    });
+  }
+
+  restoreHandlers() {
+    this._setInnerHandlers();
+    this.setSubmitClickHandler(this._callback.onSubmit);
+  }
+
+  _setInnerHandlers() {
+    this.getElement().querySelector(`.event__input--time`).addEventListener(`click`, this._dateToggleHandler);
+    this.getElement().querySelector(`.event__input--destination`).addEventListener(`input`, this._cityInputHandler);
+    this.getElement().querySelector(`.event__input--price`).addEventListener(`input`, this._priceInputHandler);
+  }
+
+  _cityInputHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      city: evt.target.value
+    }, true);
+  }
+
+  _priceInputHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      price: evt.target.value
+    }, true);
+  }
+
+  _favoriteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.favoriteClick();
+  }
+
+  setFavoriteClickHandler(callback) {
+    this._callback.favoriteClick = callback;
+    this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, this._favoriteClickHandler);
   }
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.onSubmit();
+    this._callback.onSubmit(EditTrip.parseDataToTrip(this._data));
   }
 
   setSubmitClickHandler(callback) {
     this._callback.onSubmit = callback;
-    this.getElement().querySelector(`.event__save-btn`).addEventListener(`submit`, this._formSubmitHandler);
+    this.getElement()
+    .addEventListener(`submit`, this._formSubmitHandler);
   }
 }
