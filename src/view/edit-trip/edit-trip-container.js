@@ -122,7 +122,7 @@ export default class EditTrip extends Smart {
     data = Object.assign({}, data);
 
     if (!data.isDate) {
-      data.date = null;
+      data.isDate = null;
     }
 
     delete data.isDate;

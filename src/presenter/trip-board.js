@@ -105,7 +105,7 @@ export default class TripBoard {
   }
 
   _renderTrip(tripDayList, i, trip) {
-    const tripPresenter = new TripPresenter(tripDayList, this._handleTripChange);
+    const tripPresenter = new TripPresenter(tripDayList, this._handleTripChange, this._handleModeChange);
     tripPresenter.init(trip);
     this._tripPresenter[trip.id] = tripPresenter;
   }
