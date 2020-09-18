@@ -1,5 +1,7 @@
 import Smart from "./../smart";
-import {cities} from "../../const.js";
+import {cities, registrationText, transferValue} from "../../const.js";
+import flatpickr from "flatpickr";
+import "./../../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 const addOfferSelectors = (data) => {
   const {offers} = data;
@@ -19,20 +21,55 @@ const addCitiesList = () => {
     `<option value="${city}"></option>`).join(``);
 };
 
+const addTransferList = () => {
+  return transferValue.map((transfer) =>
+    `<div class="event__type-item">
+      <input id="event-type-${transfer.toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${transfer.toLowerCase()}">
+      <label class="event__type-label  event__type-label--${transfer.toLowerCase()}" for="event-type-${transfer.toLowerCase()}-1">${transfer}</label>
+    </div>`).join(``);
+};
+
+const addRegistrationList = () => {
+  return registrationText.map((registration) =>
+    `<div class="event__type-item">
+      <input id="event-type-${registration.toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${registration.toLowerCase()}">
+      <label class="event__type-label  event__type-label--${registration.toLowerCase()}" for="event-type-${registration.toLowerCase()}-1">${registration}</label>
+    </div>`).join(` `);
+};
+
 const addEditTripContainer = (data, i) => {
-  const {transport, city, isDate, timeStart, timeEnd, price, isFavorite} = data;
+  const {transport, city, isDate, price, isFavorite} = data;
   const offerDescriptionTemplate = addOfferSelectors(data);
   const citiesListTemplate = addCitiesList(i);
+  const transferListTemplate = addTransferList(i);
+  const registrationListTemplate = addRegistrationList(i);
   return (
     `<form class="event  event--edit">
     <header class="event__header">
-      <div class="event__type-wrapper"> </div>
+      <div class="event__type-wrapper">
+        <label class="event__type  event__type-btn" for="event-type-toggle">
+          <span class="visually-hidden">Choose event type</span>
+          <img class="event__type-icon" width="17" height="17" src="img/icons/bus.png" alt="Event type icon">
+        </label>
+        <input class="event__type-toggle  visually-hidden" id="event-type-toggle" type="checkbox">
+  
+        <div class="event__type-list">
+        <fieldset class="event__type-group event__transfer">
+          <legend class="visually-hidden">Transfer</legend>
+          ${transferListTemplate}
+        </fieldset>
+        <fieldset class="event__type-group event__registration">
+          <legend class="visually-hidden">Activity</legend>
+          ${registrationListTemplate}
+        </fieldset>
+        </div>
+      </div>
 
       <div class="event__field-group  event__field-group--destination">
-        <label class="event__label  event__type-output" for="event-destination-1">
+        <label class="event__label  event__type-output" for="event-destination">
         ${transport}
         </label>
-        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city}" list="destination-list-1">
+        <input class="event__input  event__input--destination" id="event-destination" type="text" name="event-destination" value="${city}" list="destination-list-1">
         <datalist id="destination-list-1">
         ${citiesListTemplate}
         </datalist>
@@ -42,16 +79,16 @@ const addEditTripContainer = (data, i) => {
         <label class="visually-hidden" for="event-start-time-1">
           From
         </label>
-        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${isDate.toLocaleString(`en-US`, {day: `numeric`, month: `numeric`, year: `2-digit`})} ${timeStart}">
+        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${isDate}">
         &mdash;
-        <label class="visually-hidden" for="event-end-time-1">
+        <label class="visually-hidden" for="event-end-time-2">
           To
         </label>
-        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${isDate.toLocaleString(`en-US`, {day: `numeric`, month: `numeric`, year: `2-digit`})} ${timeEnd}">
+        <input class="event__input  event__input--time" id="event-end-time-2" type="text" name="event-end-time" value="${isDate}">
       </div>
 
       <div class="event__field-group  event__field-group--price">
-        <label class="event__label" for="event-price-1">
+        <label class="event__label" for="event-price-2">
           <span class="visually-hidden">Price</span>
           &euro;
         </label>
@@ -92,12 +129,15 @@ export default class EditTrip extends Smart {
     super();
     this._i = i;
     this._data = EditTrip.parseTripToData(trip);
+    this._datepicker = null;
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
-    this._dateToggleHandler = this._dateToggleHandler.bind(this);
+    this._dateChangeHandler = this._dateChangeHandler.bind(this);
+    this._eventTypeInputHandler = this._eventTypeInputHandler.bind(this);
     this._cityInputHandler = this._cityInputHandler.bind(this);
     this._priceInputHandler = this._priceInputHandler.bind(this);
     this._setInnerHandlers();
+    this._setDatepicker();
   }
 
   reset(trip) {
@@ -131,24 +171,24 @@ export default class EditTrip extends Smart {
     return data;
   }
 
-  _dateToggleHandler(evt) {
-    evt.preventDefault();
-    this.updateData({
-      isDate: !this._data.isDate
-    });
-  }
-
   restoreHandlers() {
     this._setInnerHandlers();
+    this._setDatepicker();
     this.setSubmitClickHandler(this._callback.onSubmit);
   }
 
   _setInnerHandlers() {
-    this.getElement().querySelector(`.event__input--time`).addEventListener(`click`, this._dateToggleHandler);
+    this.getElement().querySelector(`.event__type-item`).addEventListener(`click`, this._eventTypeInputHandler);
     this.getElement().querySelector(`.event__input--destination`).addEventListener(`input`, this._cityInputHandler);
     this.getElement().querySelector(`.event__input--price`).addEventListener(`input`, this._priceInputHandler);
   }
 
+  _eventTypeInputHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      transport: evt.target.value
+    }, true);
+  }
   _cityInputHandler(evt) {
     evt.preventDefault();
     this.updateData({
@@ -161,6 +201,30 @@ export default class EditTrip extends Smart {
     this.updateData({
       price: evt.target.value
     }, true);
+  }
+
+  _dateChangeHandler([userDate]) {
+    userDate.setHours(23, 59, 59, 999);
+    this.updateData({
+      date: userDate
+    });
+  }
+
+  _setDatepicker() {
+    if (this._datepicker) {
+      this._datepicker = null;
+    }
+
+    if (this._data.isDate) {
+      this._datepicker = flatpickr(
+          this.getElement().querySelectorAll(`.event__input--time`),
+          {
+            dateFormat: `m/d/y H:i`,
+            defaultDate: this._data.date,
+            onChange: this._dateChangeHandler,
+          }
+      );
+    }
   }
 
   _favoriteClickHandler(evt) {

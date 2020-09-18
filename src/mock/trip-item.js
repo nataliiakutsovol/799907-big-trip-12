@@ -36,9 +36,9 @@ const generatePrice = () => {
 const generateTimeRange = () => {
 
   const currentDate = new Date();
-  currentDate.setHours(getRandomInteger(0, 24), (0, 59), (0, 59), 999);
+  currentDate.setHours(getRandomInteger(0, 24), 59, 59, 999);
 
-  return new Date(currentDate).toLocaleString(`en-US`, {hour: `numeric`, minute: `numeric`});
+  return new Date(currentDate);
 };
 
 const generateDate = () => {
