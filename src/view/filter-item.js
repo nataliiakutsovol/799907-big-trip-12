@@ -7,7 +7,7 @@ const addFilterItem = () => {
       <input id="filter-${filter}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${filter}" checked>
       <label class="trip-filters__filter-label" for="filter-${filter}">${filter}</label>
     </div>`).join(` `);
-}
+};
 
 export default class FilterInput extends Abstract {
   constructor(i) {
@@ -22,6 +22,6 @@ export default class FilterInput extends Abstract {
         <button class="visually-hidden" type="submit">Accept filter</button>
         ${filterTeplate}
       </form>`
-    )
+    );
   }
 }

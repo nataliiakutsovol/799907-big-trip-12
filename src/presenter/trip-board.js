@@ -74,12 +74,10 @@ export default class TripBoard {
     this._renderTripItemsList();
   }
 
-  _renderCounter(counter) {
-    counter = 11;
-    debugger
-    this._TripCounter = new TripCounter(counter);
+  _renderCounter() {
+    this._TripCounter = new TripCounter();
     const tripCounterSection = this._HeaderContainer.getElement().querySelector(`.trip-main`);
-    render(tripCounterSection, this._TripCounter, true)
+    render(tripCounterSection, this._TripCounter, true);
   }
 
   _menuContainer() {
