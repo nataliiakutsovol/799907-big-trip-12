@@ -2,7 +2,6 @@ import Smart from "./../smart";
 import {cities, registrationText, transferValue} from "../../const.js";
 import flatpickr from "flatpickr";
 import "./../../../node_modules/flatpickr/dist/flatpickr.min.css";
-import moment from "moment";
 
 const addOfferSelectors = (data) => {
   const {offers} = data;
@@ -23,23 +22,23 @@ const addCitiesList = () => {
 };
 
 const addTransferList = () => {
-  return transferValue.map((transferValue) =>
+  return transferValue.map((transfer) =>
     `<div class="event__type-item">
-      <input id="event-type-${transferValue.toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${transferValue.toLowerCase()}">
-      <label class="event__type-label  event__type-label--${transferValue.toLowerCase()}" for="event-type-${transferValue.toLowerCase()}-1">${transferValue}</label>
+      <input id="event-type-${transfer.toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${transfer.toLowerCase()}">
+      <label class="event__type-label  event__type-label--${transfer.toLowerCase()}" for="event-type-${transfer.toLowerCase()}-1">${transfer}</label>
     </div>`).join(``);
 };
 
 const addRegistrationList = () => {
-  return registrationText.map((registrationText) =>
+  return registrationText.map((registration) =>
     `<div class="event__type-item">
-      <input id="event-type-${registrationText.toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${registrationText.toLowerCase()}">
-      <label class="event__type-label  event__type-label--${registrationText.toLowerCase()}" for="event-type-${registrationText.toLowerCase()}-1">${registrationText}</label>
+      <input id="event-type-${registration.toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${registration.toLowerCase()}">
+      <label class="event__type-label  event__type-label--${registration.toLowerCase()}" for="event-type-${registration.toLowerCase()}-1">${registration}</label>
     </div>`).join(` `);
-}
+};
 
 const addEditTripContainer = (data, i) => {
-  const {transport, city, isDate, timeStart, timeEnd, price, isFavorite} = data;
+  const {transport, city, isDate, price, isFavorite} = data;
   const offerDescriptionTemplate = addOfferSelectors(data);
   const citiesListTemplate = addCitiesList(i);
   const transferListTemplate = addTransferList(i);
@@ -186,7 +185,6 @@ export default class EditTrip extends Smart {
 
   _eventTypeInputHandler(evt) {
     evt.preventDefault();
-    debugger
     this.updateData({
       transport: evt.target.value
     }, true);
@@ -214,17 +212,16 @@ export default class EditTrip extends Smart {
 
   _setDatepicker() {
     if (this._datepicker) {
-      //this._datepicker.destroy();
       this._datepicker = null;
     }
 
     if (this._data.isDate) {
       this._datepicker = flatpickr(
-          this.getElement().querySelectorAll(".event__input--time"),
+          this.getElement().querySelectorAll(`.event__input--time`),
           {
             dateFormat: `m/d/y H:i`,
             defaultDate: this._data.date,
-            onChange: this._dateChangeHandler
+            onChange: this._dateChangeHandler,
           }
       );
     }
