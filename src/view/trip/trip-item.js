@@ -1,4 +1,10 @@
 import Abstract from "../../abstract.js";
+import moment from "moment";
+
+const addTimeDifference = (trip) => {
+  const {timeStart, timeEnd} = trip;
+  return moment.utc(moment(timeEnd).diff(moment(timeStart))).format("h[h] mm[m]");
+}
 
 const addOfferSelectors = (trip) => {
   const {offers} = trip;
@@ -13,6 +19,7 @@ const addOfferSelectors = (trip) => {
 const addTripItem = (trip) => {
   const {icons, transport, city, timeStart, timeEnd, price} = trip;
   const offerDescriptionTemplate = addOfferSelectors(trip);
+  const diff = addTimeDifference(trip)
   return (
     `<li class="trip-events__item">
       <div class="event">
@@ -23,11 +30,11 @@ const addTripItem = (trip) => {
 
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${timeStart}">${timeStart}</time>
+            <time class="event__start-time" datetime="${timeStart}">${moment(timeStart).format('HH:mm')}</time>
             &mdash;
-            <time class="event__end-time" datetime="${timeEnd}">${timeEnd}</time>
+            <time class="event__end-time" datetime="${timeEnd}">${moment(timeEnd).format('HH:mm')}</time>
           </p>
-          <p class="event__duration">1H 35M</p>
+          <p class="event__duration">${diff}</p>
         </div>
 
         <p class="event__price">

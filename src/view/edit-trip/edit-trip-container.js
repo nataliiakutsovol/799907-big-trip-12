@@ -1,5 +1,8 @@
 import Smart from "./../smart";
-import {cities} from "../../const.js";
+import {cities, registrationText, transferValue} from "../../const.js";
+import flatpickr from "flatpickr";
+import "./../../../node_modules/flatpickr/dist/flatpickr.min.css";
+import moment from "moment";
 
 const addOfferSelectors = (data) => {
   const {offers} = data;
@@ -19,14 +22,49 @@ const addCitiesList = () => {
     `<option value="${city}"></option>`).join(``);
 };
 
+const addTransferList = () => {
+  return transferValue.map((transferValue) =>
+    `<div class="event__type-item">
+      <input id="event-type-${transferValue.toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${transferValue.toLowerCase()}">
+      <label class="event__type-label  event__type-label--${transferValue.toLowerCase()}" for="event-type-${transferValue.toLowerCase()}-1">${transferValue}</label>
+    </div>`).join(``);
+};
+
+const addRegistrationList = () => {
+  return registrationText.map((registrationText) =>
+    `<div class="event__type-item">
+      <input id="event-type-${registrationText.toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${registrationText.toLowerCase()}">
+      <label class="event__type-label  event__type-label--${registrationText.toLowerCase()}" for="event-type-${registrationText.toLowerCase()}-1">${registrationText}</label>
+    </div>`).join(` `);
+}
+
 const addEditTripContainer = (data, i) => {
   const {transport, city, isDate, timeStart, timeEnd, price, isFavorite} = data;
   const offerDescriptionTemplate = addOfferSelectors(data);
   const citiesListTemplate = addCitiesList(i);
+  const transferListTemplate = addTransferList(i);
+  const registrationListTemplate = addRegistrationList(i);
   return (
     `<form class="event  event--edit">
     <header class="event__header">
-      <div class="event__type-wrapper"> </div>
+      <div class="event__type-wrapper">
+        <label class="event__type  event__type-btn" for="event-type-toggle">
+          <span class="visually-hidden">Choose event type</span>
+          <img class="event__type-icon" width="17" height="17" src="img/icons/bus.png" alt="Event type icon">
+        </label>
+        <input class="event__type-toggle  visually-hidden" id="event-type-toggle" type="checkbox">
+  
+        <div class="event__type-list">
+        <fieldset class="event__type-group event__transfer">
+          <legend class="visually-hidden">Transfer</legend>
+          ${transferListTemplate}
+        </fieldset>
+        <fieldset class="event__type-group event__registration">
+          <legend class="visually-hidden">Activity</legend>
+          ${registrationListTemplate}
+        </fieldset>
+        </div>
+      </div>
 
       <div class="event__field-group  event__field-group--destination">
         <label class="event__label  event__type-output" for="event-destination-1">
@@ -42,12 +80,12 @@ const addEditTripContainer = (data, i) => {
         <label class="visually-hidden" for="event-start-time-1">
           From
         </label>
-        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${isDate.toLocaleString(`en-US`, {day: `numeric`, month: `numeric`, year: `2-digit`})} ${timeStart}">
+        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${isDate.toLocaleString(`en-US`, {day: `numeric`, month: `numeric`, year: `2-digit`})} ${moment(timeStart).format('LT')}">
         &mdash;
         <label class="visually-hidden" for="event-end-time-1">
           To
         </label>
-        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${isDate.toLocaleString(`en-US`, {day: `numeric`, month: `numeric`, year: `2-digit`})} ${timeEnd}">
+        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${isDate.toLocaleString(`en-US`, {day: `numeric`, month: `numeric`, year: `2-digit`})} ${moment(timeEnd).format('LT')}">
       </div>
 
       <div class="event__field-group  event__field-group--price">
