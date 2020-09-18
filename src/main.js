@@ -1,8 +1,3 @@
-import Menu from './view/menu.js';
-import TripCounter from './view/counter.js';
-import FilterInput from './view/filter-item.js';
-import AcceptFiltersBtn from './view/filter-button.js';
-
 // first trip details
 import EventTypeIconSection from './view/event-type-icon.js';
 import EventDestination from './view/first-trip/event-destination.js';
@@ -19,7 +14,7 @@ import TripDestignation from './view/first-trip/trip-details-destignation';
 
 // mocks
 import {generateTrip} from './mock/trip-item.js';
-import {TRIP_COUNT, filterValue, transferValue, registrationText, btnObj} from './const.js';
+import {TRIP_COUNT, transferValue, registrationText, btnObj} from './const.js';
 import {render} from './utils/render.js';
 import TripBoard from "./presenter/trip-board.js";
 
@@ -29,19 +24,6 @@ const mainBody = document.querySelector(`.page-body`);
 
 const boardPresenter = new TripBoard(mainBody);
 boardPresenter.init(trip);
-
-// Header components
-const headerContainer = mainBody.querySelector(`.page-header`);
-const tripCounterContainer = headerContainer.querySelector(`.trip-main`);
-const menuContainer = tripCounterContainer.querySelector(`.trip-controls`);
-
-render(tripCounterContainer, new TripCounter(), true);
-render(menuContainer, new Menu().getElement());
-render(menuContainer, new AcceptFiltersBtn().getElement());
-const filterItemContainer = menuContainer.querySelector(`.trip-filters`);
-for (let i = 0; i < filterValue.length; i++) {
-  render(filterItemContainer, new FilterInput(i).getElement(), true);
-}
 
 // main body components
 const mainContainer = mainBody.querySelector(`.page-main`);
