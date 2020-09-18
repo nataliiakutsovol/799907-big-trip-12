@@ -67,10 +67,10 @@ const addEditTripContainer = (data, i) => {
       </div>
 
       <div class="event__field-group  event__field-group--destination">
-        <label class="event__label  event__type-output" for="event-destination-1">
+        <label class="event__label  event__type-output" for="event-destination">
         ${transport}
         </label>
-        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city}" list="destination-list-1">
+        <input class="event__input  event__input--destination" id="event-destination" type="text" name="event-destination" value="${city}" list="destination-list-1">
         <datalist id="destination-list-1">
         ${citiesListTemplate}
         </datalist>
@@ -80,16 +80,16 @@ const addEditTripContainer = (data, i) => {
         <label class="visually-hidden" for="event-start-time-1">
           From
         </label>
-        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${isDate.toLocaleString(`en-US`, {day: `numeric`, month: `numeric`, year: `2-digit`})} ${moment(timeStart).format('LT')}">
+        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${isDate}">
         &mdash;
-        <label class="visually-hidden" for="event-end-time-1">
+        <label class="visually-hidden" for="event-end-time-2">
           To
         </label>
-        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${isDate.toLocaleString(`en-US`, {day: `numeric`, month: `numeric`, year: `2-digit`})} ${moment(timeEnd).format('LT')}">
+        <input class="event__input  event__input--time" id="event-end-time-2" type="text" name="event-end-time" value="${isDate}">
       </div>
 
       <div class="event__field-group  event__field-group--price">
-        <label class="event__label" for="event-price-1">
+        <label class="event__label" for="event-price-2">
           <span class="visually-hidden">Price</span>
           &euro;
         </label>
@@ -130,12 +130,15 @@ export default class EditTrip extends Smart {
     super();
     this._i = i;
     this._data = EditTrip.parseTripToData(trip);
+    this._datepicker = null;
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
-    this._dateToggleHandler = this._dateToggleHandler.bind(this);
+    this._dateChangeHandler = this._dateChangeHandler.bind(this);
+    this._eventTypeInputHandler = this._eventTypeInputHandler.bind(this);
     this._cityInputHandler = this._cityInputHandler.bind(this);
     this._priceInputHandler = this._priceInputHandler.bind(this);
     this._setInnerHandlers();
+    this._setDatepicker();
   }
 
   reset(trip) {
@@ -169,24 +172,25 @@ export default class EditTrip extends Smart {
     return data;
   }
 
-  _dateToggleHandler(evt) {
-    evt.preventDefault();
-    this.updateData({
-      isDate: !this._data.isDate
-    });
-  }
-
   restoreHandlers() {
     this._setInnerHandlers();
+    this._setDatepicker();
     this.setSubmitClickHandler(this._callback.onSubmit);
   }
 
   _setInnerHandlers() {
-    this.getElement().querySelector(`.event__input--time`).addEventListener(`click`, this._dateToggleHandler);
+    this.getElement().querySelector(`.event__type-item`).addEventListener(`click`, this._eventTypeInputHandler);
     this.getElement().querySelector(`.event__input--destination`).addEventListener(`input`, this._cityInputHandler);
     this.getElement().querySelector(`.event__input--price`).addEventListener(`input`, this._priceInputHandler);
   }
 
+  _eventTypeInputHandler(evt) {
+    evt.preventDefault();
+    debugger
+    this.updateData({
+      transport: evt.target.value
+    }, true);
+  }
   _cityInputHandler(evt) {
     evt.preventDefault();
     this.updateData({
@@ -199,6 +203,31 @@ export default class EditTrip extends Smart {
     this.updateData({
       price: evt.target.value
     }, true);
+  }
+
+  _dateChangeHandler([userDate]) {
+    userDate.setHours(23, 59, 59, 999);
+    this.updateData({
+      date: userDate
+    });
+  }
+
+  _setDatepicker() {
+    if (this._datepicker) {
+      //this._datepicker.destroy();
+      this._datepicker = null;
+    }
+
+    if (this._data.isDate) {
+      this._datepicker = flatpickr(
+          this.getElement().querySelectorAll(".event__input--time"),
+          {
+            dateFormat: `m/d/y H:i`,
+            defaultDate: this._data.date,
+            onChange: this._dateChangeHandler
+          }
+      );
+    }
   }
 
   _favoriteClickHandler(evt) {
