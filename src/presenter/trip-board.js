@@ -141,7 +141,7 @@ export default class TripBoard {
     this._menuContainer();
     this._renderFilters();
     this._renderSorting();
-    //this._renderFirstTrip();
+    // this._renderFirstTrip();
     this._renderTripDayListContainer();
     this._renderTripItemsList(0, Math.min(this._boardTrips.length, TRIP_COUNT));
   }
