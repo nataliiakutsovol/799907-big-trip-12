@@ -34,3 +34,14 @@ export const SortType = {
   TIME: `time`,
   PRICE: `price`
 };
+
+export const UserAction = {
+  UPDATE_TRIP: `UPDATE_TRIP`,
+  ADD_TRIP: `ADD_TRIP`,
+  DELETE_TRIP: `DELETE_TRIP`
+};
+
+export const UpdateType = {
+  MINOR: `MINOR`,
+  MAJOR: `MAJOR`
+};

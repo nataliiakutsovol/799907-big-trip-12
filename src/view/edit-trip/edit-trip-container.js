@@ -132,12 +132,21 @@ export default class EditTrip extends Smart {
     this._datepicker = null;
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._formDeleteHandler = this._formDeleteHandler.bind(this);
     this._dateChangeHandler = this._dateChangeHandler.bind(this);
     this._eventTypeInputHandler = this._eventTypeInputHandler.bind(this);
     this._cityInputHandler = this._cityInputHandler.bind(this);
     this._priceInputHandler = this._priceInputHandler.bind(this);
     this._setInnerHandlers();
     this._setDatepicker();
+  }
+
+  removeElement() {
+    super.removeElement();
+
+    if (this._datepicker) {
+      this._datepicker = null;
+    }
   }
 
   reset(trip) {
@@ -175,6 +184,7 @@ export default class EditTrip extends Smart {
     this._setInnerHandlers();
     this._setDatepicker();
     this.setSubmitClickHandler(this._callback.onSubmit);
+    this.setDeleteClickHandler(this._callback.onDelete);
   }
 
   _setInnerHandlers() {
@@ -234,7 +244,8 @@ export default class EditTrip extends Smart {
 
   setFavoriteClickHandler(callback) {
     this._callback.favoriteClick = callback;
-    this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, this._favoriteClickHandler);
+    this.getElement()
+    .querySelector(`.event__favorite-btn`).addEventListener(`click`, this._favoriteClickHandler);
   }
 
   _formSubmitHandler(evt) {
@@ -246,5 +257,16 @@ export default class EditTrip extends Smart {
     this._callback.onSubmit = callback;
     this.getElement()
     .addEventListener(`submit`, this._formSubmitHandler);
+  }
+
+  _formDeleteHandler(evt) {
+    evt.preventDefault();
+    this._callback.onDelete(EditTrip.parseDataToTrip(this._data));
+  }
+
+  setDeleteClickHandler(callback) {
+    this._callback.onDelete = callback;
+    this.getElement()
+    .querySelector(`.event__reset-btn`).addEventListener(`click`, this._formDeleteHandler);
   }
 }

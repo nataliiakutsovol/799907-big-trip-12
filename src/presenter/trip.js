@@ -1,6 +1,7 @@
 import Trip from './../view/trip/trip-item.js';
 import EditTrip from './../view/edit-trip/edit-trip-container.js';
 import {render, replace, remove} from './../utils/render';
+import {UserAction, UpdateType} from "./../const.js";
 
 const Mode = {
   DEFAULT: `DEFAULT`,
@@ -21,6 +22,7 @@ export default class TripPresenter {
     this._editClickHandler = this._editClickHandler.bind(this);
     this._addToFavoriteHandler = this._addToFavoriteHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._formDeleteHandler = this._formDeleteHandler.bind(this);
     this._changeMode = changeMode;
   }
 
@@ -36,6 +38,7 @@ export default class TripPresenter {
     this._tripElement.setEditTripClickHandler(this._editClickHandler);
     this._tripEditElement.setFavoriteClickHandler(this._addToFavoriteHandler);
     this._tripEditElement.setSubmitClickHandler(this._formSubmitHandler);
+    this._tripEditElement.setDeleteClickHandler(this._formDeleteHandler);
 
     if (prevTripElement === null || prevEditTripElement === null) {
       render(this._tripDayList, this._tripElement, true);
@@ -102,6 +105,12 @@ export default class TripPresenter {
     this._replaceEditToTrip();
   }
 
+  _formDeleteHandler(trip) {
+    this._changeData(
+        UserAction.DELETE_TRIP,
+        UpdateType.MINOR,
+        trip);
+  }
   destroy() {
     remove(this._tripElement);
     remove(this._tripEditElement);

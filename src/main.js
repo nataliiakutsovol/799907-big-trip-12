@@ -17,13 +17,16 @@ import {generateTrip} from './mock/trip-item.js';
 import {TRIP_COUNT, transferValue, registrationText, btnObj} from './const.js';
 import {render} from './utils/render.js';
 import TripBoard from "./presenter/trip-board.js";
+import TripModel from "./model/trip";
 
-const trip = new Array(TRIP_COUNT).fill().map(generateTrip);
+const trips = new Array(TRIP_COUNT).fill().map(generateTrip);
+const tripModel = new TripModel();
+tripModel.setTrips(trips);
 
 const mainBody = document.querySelector(`.page-body`);
 
-const boardPresenter = new TripBoard(mainBody);
-boardPresenter.init(trip);
+const boardPresenter = new TripBoard(mainBody, tripModel);
+boardPresenter.init(trips);
 
 // main body components
 // const mainContainer = mainBody.querySelector(`.page-main`);

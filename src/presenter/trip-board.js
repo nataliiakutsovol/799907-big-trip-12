@@ -9,12 +9,13 @@ import TripListContainer from './../view/trip/trip-list-container.js';
 import TripDayList from './../view/trip/trip-day-list.js';
 import {render} from './../utils/render.js';
 import {updateItem} from './../utils/common';
-import {TRIP_COUNT, SortType} from './../const.js';
+import {SortType} from './../const.js';
 import TripPresenter from './trip';
 
 export default class TripBoard {
-  constructor(mainBody) {
+  constructor(mainBody, tripModel) {
     this._mainBody = mainBody;
+    this._tripModel = tripModel;
     this._MainContainer = new MainContainer();
     this._HeaderContainer = new HeaderContainer();
     this._MenuContainer = new Menu();
@@ -28,12 +29,14 @@ export default class TripBoard {
     this._handleModeChange = this._handleModeChange.bind(this);
   }
 
-  init(boardTrips) {
-    this._boardTrips = boardTrips.slice();
-    this._sourcedBoardTrips = boardTrips.slice();
+  init() {
     render(this._mainBody, this._MainContainer, true);
     render(this._mainBody, this._HeaderContainer, true);
     this._tripBoard();
+  }
+
+  _getTrips() {
+    return this._tripModel.getTrips();
   }
 
   _handleModeChange() {
@@ -43,8 +46,6 @@ export default class TripBoard {
   }
 
   _handleTripChange(updatedTrip) {
-    this._boardTrips = updateItem(this._boardTrips, updatedTrip);
-    this._sourcedBoardTrips = updateItem(this._sourcedBoardTrips, updatedTrip);
     this._tripPresenter[updatedTrip.id].init(updatedTrip);
   }
 
@@ -115,14 +116,13 @@ export default class TripBoard {
   }
 
   _renderTripItemsList() {
-    const dates = Array.from(new Set(this._boardTrips.map((trip) => new Date(trip.date).setHours(0, 0, 0, 0)).sort()));
+    const dates = Array.from(new Set(this._getTrips().map((trip) => new Date(trip.date).setHours(0, 0, 0, 0)).sort()));
     dates.forEach((day, i) => {
-      const dayTrips = this._boardTrips.filter((trip) => {
+      const dayTrips = this._getTrips().filter((trip) => {
         return (trip.date.getTime() >= day && trip.date.getTime() <= day + 1000 * 60 * 60 * 24);
       });
       this._renderTripDayList(i, dayTrips);
     });
-
   }
 
   _renderTrip(tripDayList, i, trip) {
@@ -131,10 +131,10 @@ export default class TripBoard {
     this._tripPresenter[trip.id] = tripPresenter;
   }
 
-  _clearTripList() {
-    Object.values(this._tripPresenter).forEach((presenter) => presenter.destroy());
-    this._tripPresenter = {};
-  }
+  // _clearTripList() {
+  //   Object.values(this._tripPresenter).forEach((presenter) => presenter.destroy());
+  //   this._tripPresenter = {};
+  // }
 
   _tripBoard() {
     this._renderCounter();
@@ -143,6 +143,6 @@ export default class TripBoard {
     this._renderSorting();
     // this._renderFirstTrip();
     this._renderTripDayListContainer();
-    this._renderTripItemsList(0, Math.min(this._boardTrips.length, TRIP_COUNT));
+    this._renderTripItemsList();
   }
 }
