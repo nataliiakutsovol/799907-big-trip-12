@@ -1,5 +1,8 @@
 import HeaderContainer from './../view/header-container.js';
 import MainContainer from './../view/main-container.js';
+import TripCounter from './../view/counter.js';
+import Menu from './../view/menu.js';
+import FilterInput from './../view/filter-item.js';
 import SortContainer from './../view/sorting-container.js';
 import FirstTripEvent from './../view/first-trip/first-trip-container.js';
 import TripListContainer from './../view/trip/trip-list-container.js';
@@ -14,6 +17,7 @@ export default class TripBoard {
     this._mainBody = mainBody;
     this._MainContainer = new MainContainer();
     this._HeaderContainer = new HeaderContainer();
+    this._MenuContainer = new Menu();
     this._SortingContainer = new SortContainer();
     this._FirstTripContainer = new FirstTripEvent();
     this._TripListContainer = new TripListContainer();
@@ -70,6 +74,23 @@ export default class TripBoard {
     this._renderTripItemsList();
   }
 
+  _renderCounter() {
+    this._TripCounter = new TripCounter();
+    const tripCounterSection = this._HeaderContainer.getElement().querySelector(`.trip-main`);
+    render(tripCounterSection, this._TripCounter, true);
+  }
+
+  _menuContainer() {
+    const menuContainer = this._HeaderContainer.getElement().querySelector(`.trip-controls`);
+    render(menuContainer, this._MenuContainer);
+  }
+
+  _renderFilters() {
+    this._Filters = new FilterInput();
+    const FilterItems = this._HeaderContainer.getElement().querySelector(`.trip-controls`);
+    render(FilterItems, this._Filters);
+  }
+
   _renderSorting() {
     render(this._MainContainer, this._SortingContainer);
     this._SortingContainer.setSortTypeChangeHandler(this._handleSortTypeChange);
@@ -116,8 +137,11 @@ export default class TripBoard {
   }
 
   _tripBoard() {
+    this._renderCounter();
+    this._menuContainer();
+    this._renderFilters();
     this._renderSorting();
-    this._renderFirstTrip();
+    // this._renderFirstTrip();
     this._renderTripDayListContainer();
     this._renderTripItemsList(0, Math.min(this._boardTrips.length, TRIP_COUNT));
   }

@@ -116,7 +116,7 @@ const addEditTripContainer = (data, i) => {
         <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
         <div class="event__available-offers">
-        ${offerDescriptionTemplate}
+          ${offerDescriptionTemplate}
         </div>
       </section>
     </section>
