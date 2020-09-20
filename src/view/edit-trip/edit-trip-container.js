@@ -201,10 +201,7 @@ export default class EditTrip extends Smart {
   }
   _cityInputHandler(evt) {
     evt.preventDefault();
-    this.updateData(
-      UserAction.UPDATE_TRIP,
-      UpdateType.PATCH,
-      {
+    this.updateData({
       city: evt.target.value
     }, true);
   }

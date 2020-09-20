@@ -8,13 +8,16 @@ import FirstTripEvent from './../view/first-trip/first-trip-container.js';
 import TripListContainer from './../view/trip/trip-list-container.js';
 import TripDayList from './../view/trip/trip-day-list.js';
 import {render, remove} from './../utils/render.js';
+import {filter} from "./../utils/filters.js";
 import {SortType, UpdateType, UserAction} from './../const.js';
 import TripPresenter from './trip';
+import FiltersPresenter from './filters';
 
 export default class TripBoard {
-  constructor(mainBody, tripModel) {
+  constructor(mainBody, tripModel, filtersModel) {
     this._mainBody = mainBody;
     this._tripsModel = tripModel;
+    this._filtersModel = filtersModel;
     this._MainContainer = new MainContainer();
     this._HeaderContainer = new HeaderContainer();
     this._MenuContainer = new Menu();
@@ -23,12 +26,14 @@ export default class TripBoard {
     this._TripListContainer = new TripListContainer();
     this._currentSortType = SortType.EVENT;
     this._tripPresenter = {};
+    this._filtersPresenter = {};
 
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
 
     this._tripsModel.addObserver(this._handleModelEvent);
+    this._filtersModel.addObserver(this._handleModelEvent);
   }
 
   init() {
@@ -77,10 +82,11 @@ export default class TripBoard {
         this._tripPresenter[data.id].init(data);
         break;
       case UpdateType.MINOR:
-        this._clearBoard()
+        this._clearBoard();
         this._tripList();
         break;
       case UpdateType.MAJOR:
+        this._clearBoard();
         this._tripList();
         break;
     }
@@ -107,12 +113,6 @@ export default class TripBoard {
   _renderMenuContainer() {
     const menuContainer = this._HeaderContainer.getElement().querySelector(`.trip-controls`);
     render(menuContainer, this._MenuContainer);
-  }
-
-  _renderFilters() {
-    this._Filters = new FilterInput();
-    const FilterItems = this._HeaderContainer.getElement().querySelector(`.trip-controls`);
-    render(FilterItems, this._Filters);
   }
 
   _renderSorting() {
@@ -175,7 +175,6 @@ export default class TripBoard {
   _tripBoard() {
     this._renderCounter();
     this._renderMenuContainer();
-    this._renderFilters();
     // this._renderFirstTrip();
   }
 

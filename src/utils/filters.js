@@ -1,16 +1,24 @@
-export const filterPast = (date) => {
+import {FilterType} from "./../const";
+
+const isFilterPast = (date) => {
   const currentDate = new Date;
   return moment(date).isBefore(currentDate)
 }
 
-export const filterFuture = (date) => {
+const isFilterFuture = (date) => {
   const currentDate = new Date;
   return moment(date).isAfter(currentDate)
 }
 
-export const filterEverything = (date) => {
+const isFilterEverything = (date) => {
   const currentDate = new Date;
   return moment(date).isSame(currentDate)
+}
+
+export const filter = {
+  [FilterType.PAST]: (trips) => trips.filter((trip) => isFilterPast(trip.date)),
+  [FilterType.FUTURE]: (trips) => trips.filter((trip) => isFilterFuture(trip.date)),
+  [FilterType.EVERYTHING]: (trips) => trips.filter((trip) => isFilterEverything(trip.date)),
 }
 
 export const sortTripByEvent = () => {

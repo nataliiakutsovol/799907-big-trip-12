@@ -29,6 +29,12 @@ export const btnObj = {
   btnClass: [`event__save-btn  btn  btn--blue`, `event__reset-btn`]
 };
 
+export const FilterType = {
+  PAST: `past`,
+  FUTURE: `future`,
+  EVERYTHING: `everything`
+};
+
 export const SortType = {
   EVENT: `event`,
   TIME: `time`,

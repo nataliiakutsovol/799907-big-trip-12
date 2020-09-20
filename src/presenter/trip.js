@@ -10,7 +10,6 @@ const Mode = {
 
 export default class TripPresenter {
   constructor(tripDayList, changeData, changeMode) {
-
     this._tripDayList = tripDayList;
     this._changeData = changeData;
 
