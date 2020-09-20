@@ -1,5 +1,5 @@
 import Smart from "./../smart";
-import {cities, registrationText, transferValue} from "../../const.js";
+import {cities, registrationText, transferValue, UserAction, UpdateType} from "../../const.js";
 import flatpickr from "flatpickr";
 import "./../../../node_modules/flatpickr/dist/flatpickr.min.css";
 
@@ -201,7 +201,10 @@ export default class EditTrip extends Smart {
   }
   _cityInputHandler(evt) {
     evt.preventDefault();
-    this.updateData({
+    this.updateData(
+      UserAction.UPDATE_TRIP,
+      UpdateType.PATCH,
+      {
       city: evt.target.value
     }, true);
   }
@@ -222,6 +225,7 @@ export default class EditTrip extends Smart {
 
   _setDatepicker() {
     if (this._datepicker) {
+      this._datepicker.destroy();
       this._datepicker = null;
     }
 

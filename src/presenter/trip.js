@@ -90,6 +90,8 @@ export default class TripPresenter {
 
   _addToFavoriteHandler() {
     this._changeData(
+        UserAction.UPDATE_TRIP,
+        UpdateType.PATCH,
         Object.assign(
             { },
             this._trip,
@@ -101,7 +103,10 @@ export default class TripPresenter {
   }
 
   _formSubmitHandler(trip) {
-    this._changeData(trip);
+    this._changeData(
+      UserAction.UPDATE_TRIP,
+      UpdateType.MINOR,
+      trip);
     this._replaceEditToTrip();
   }
 
@@ -109,8 +114,10 @@ export default class TripPresenter {
     this._changeData(
         UserAction.DELETE_TRIP,
         UpdateType.MINOR,
-        trip);
+        trip
+    );
   }
+
   destroy() {
     remove(this._tripElement);
     remove(this._tripEditElement);

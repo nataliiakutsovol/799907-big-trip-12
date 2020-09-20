@@ -1,3 +1,18 @@
+export const filterPast = (date) => {
+  const currentDate = new Date;
+  return moment(date).isBefore(currentDate)
+}
+
+export const filterFuture = (date) => {
+  const currentDate = new Date;
+  return moment(date).isAfter(currentDate)
+}
+
+export const filterEverything = (date) => {
+  const currentDate = new Date;
+  return moment(date).isSame(currentDate)
+}
+
 export const sortTripByEvent = () => {
 
 };
