@@ -167,7 +167,7 @@ export default class TripBoard {
     this._tripPresenter = {};
 
     remove(this._SortingContainer);
-    remove(this._noTripContainer);
+    remove(this._noTripsContainer);
     remove(this._TripListContainer);
 
     this._renderedTripCount = Math.min(tripCount, this._renderedTripCount);
