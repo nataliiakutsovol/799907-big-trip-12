@@ -44,7 +44,7 @@ const addEditTripContainer = (data, i) => {
   const citiesListTemplate = addCitiesList(i);
   const transferListTemplate = addTransferList(i);
   const registrationListTemplate = addRegistrationList(i);
-  //const isDisabled = this._checkCityInputValue();
+  // const isDisabled = this._checkCityInputValue();
   return (
     `<form class="event  event--edit">
     <header class="event__header">
@@ -138,7 +138,7 @@ export default class EditTrip extends Smart {
     this._dateChangeHandler = this._dateChangeHandler.bind(this);
     this._eventTypeInputHandler = this._eventTypeInputHandler.bind(this);
     this._cityInputHandler = this._cityInputHandler.bind(this);
-    this._checkCityInputValue = this._checkCityInputValue(this)
+    this._checkCityInputValue = this._checkCityInputValue(this);
     this._priceInputHandler = this._priceInputHandler.bind(this);
     this._setInnerHandlers();
     this._setDatepicker();
@@ -208,17 +208,15 @@ export default class EditTrip extends Smart {
     this.updateData({
       city: evt.target.value
     }, true);
-
-    if(cities.includes(evt.target.value)) {
-      return;
-    }
   }
 
+  // функцию для проверки введенного пользователем города я то написала,
+  // но не понимаю как "вытянуть ее наверх" в темплейт самой кнопки save, помоги плиз:)
   _checkCityInputValue() {
-    let cityInput = this.getElement().querySelector(`.event__input--destination`)
-    if(cities.includes(cityInput.value)) {
+    let cityInput = this.getElement().querySelector(`.event__input--destination`);
+    if (cities.includes(cityInput.value)) {
       return;
-    } 
+    }
   }
 
   _priceInputHandler(evt) {
