@@ -11,20 +11,29 @@ import Buttons from './view/buttons.js';
 import TripDetails from './view/first-trip/trip-details-container.js';
 import TripOffers from './view/first-trip/trip-details-offers.js';
 import TripDestignation from './view/first-trip/trip-details-destignation';
-
+import FilterInput from './view/filter-item.js';
 // mocks
 import {generateTrip} from './mock/trip-item.js';
 import {TRIP_COUNT, transferValue, registrationText, btnObj} from './const.js';
 import {render} from './utils/render.js';
 import TripBoard from "./presenter/trip-board.js";
+import FiltersPresenter from "./presenter/filters.js";
+import TripsModel from "./model/trip";
+import FiltersModel from "./model/filters";
 
-const trip = new Array(TRIP_COUNT).fill().map(generateTrip);
+const trips = new Array(TRIP_COUNT).fill().map(generateTrip);
+const tripsModel = new TripsModel();
+tripsModel.setTrips(trips);
+
+const filtersModel = new FiltersModel();
 
 const mainBody = document.querySelector(`.page-body`);
 
-const boardPresenter = new TripBoard(mainBody);
-boardPresenter.init(trip);
+const boardPresenter = new TripBoard(mainBody, tripsModel, filtersModel);
+boardPresenter.init();
 
+const filtersPresenter = new FiltersPresenter(mainBody, tripsModel, filtersModel);
+filtersPresenter.init();
 // main body components
 // const mainContainer = mainBody.querySelector(`.page-main`);
 // const tripDetailsContainer = mainContainer.querySelector(`.event--edit`);

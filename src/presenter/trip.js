@@ -1,6 +1,7 @@
 import Trip from './../view/trip/trip-item.js';
 import EditTrip from './../view/edit-trip/edit-trip-container.js';
 import {render, replace, remove} from './../utils/render';
+import {UserAction, UpdateType} from "./../const.js";
 
 const Mode = {
   DEFAULT: `DEFAULT`,
@@ -9,7 +10,6 @@ const Mode = {
 
 export default class TripPresenter {
   constructor(tripDayList, changeData, changeMode) {
-
     this._tripDayList = tripDayList;
     this._changeData = changeData;
 
@@ -21,6 +21,7 @@ export default class TripPresenter {
     this._editClickHandler = this._editClickHandler.bind(this);
     this._addToFavoriteHandler = this._addToFavoriteHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._formDeleteHandler = this._formDeleteHandler.bind(this);
     this._changeMode = changeMode;
   }
 
@@ -36,6 +37,7 @@ export default class TripPresenter {
     this._tripElement.setEditTripClickHandler(this._editClickHandler);
     this._tripEditElement.setFavoriteClickHandler(this._addToFavoriteHandler);
     this._tripEditElement.setSubmitClickHandler(this._formSubmitHandler);
+    this._tripEditElement.setDeleteClickHandler(this._formDeleteHandler);
 
     if (prevTripElement === null || prevEditTripElement === null) {
       render(this._tripDayList, this._tripElement, true);
@@ -87,6 +89,8 @@ export default class TripPresenter {
 
   _addToFavoriteHandler() {
     this._changeData(
+        UserAction.UPDATE_TRIP,
+        UpdateType.PATCH,
         Object.assign(
             { },
             this._trip,
@@ -98,8 +102,19 @@ export default class TripPresenter {
   }
 
   _formSubmitHandler(trip) {
-    this._changeData(trip);
+    this._changeData(
+        UserAction.UPDATE_TRIP,
+        UpdateType.MINOR,
+        trip);
     this._replaceEditToTrip();
+  }
+
+  _formDeleteHandler(trip) {
+    this._changeData(
+        UserAction.DELETE_TRIP,
+        UpdateType.MINOR,
+        trip
+    );
   }
 
   destroy() {

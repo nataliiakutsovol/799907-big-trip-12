@@ -5,10 +5,10 @@ import "./../../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 const addOfferSelectors = (data) => {
   const {offers} = data;
-  return offers.map((offer) =>
+  return offers.map((offer, i) =>
     `<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-train-1" type="checkbox" name="event-offer-train">
-      <label class="event__offer-label" for="event-offer-train-1">
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-train-${i + 1}" type="checkbox" name="event-offer-train">
+      <label class="event__offer-label" for="event-offer-train-${i + 1}">
         <span class="event__offer-title">${offer.name}</span>
         &plus;
         &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
@@ -37,12 +37,14 @@ const addRegistrationList = () => {
     </div>`).join(` `);
 };
 
+
 const addEditTripContainer = (data, i) => {
   const {transport, city, isDate, price, isFavorite} = data;
   const offerDescriptionTemplate = addOfferSelectors(data);
   const citiesListTemplate = addCitiesList(i);
   const transferListTemplate = addTransferList(i);
   const registrationListTemplate = addRegistrationList(i);
+  //const isDisabled = this._checkCityInputValue();
   return (
     `<form class="event  event--edit">
     <header class="event__header">
@@ -92,10 +94,10 @@ const addEditTripContainer = (data, i) => {
           <span class="visually-hidden">Price</span>
           &euro;
         </label>
-        <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
+        <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${price}">
       </div>
 
-      <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
+      <button class="event__save-btn  btn  btn--blue" type="submit" >Save</button>
       <button class="event__reset-btn" type="reset">Delete</button>
 
       <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${isFavorite === true ? `checked` : ` `}>
@@ -132,12 +134,22 @@ export default class EditTrip extends Smart {
     this._datepicker = null;
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._formDeleteHandler = this._formDeleteHandler.bind(this);
     this._dateChangeHandler = this._dateChangeHandler.bind(this);
     this._eventTypeInputHandler = this._eventTypeInputHandler.bind(this);
     this._cityInputHandler = this._cityInputHandler.bind(this);
+    this._checkCityInputValue = this._checkCityInputValue(this)
     this._priceInputHandler = this._priceInputHandler.bind(this);
     this._setInnerHandlers();
     this._setDatepicker();
+  }
+
+  removeElement() {
+    super.removeElement();
+
+    if (this._datepicker) {
+      this._datepicker = null;
+    }
   }
 
   reset(trip) {
@@ -175,6 +187,7 @@ export default class EditTrip extends Smart {
     this._setInnerHandlers();
     this._setDatepicker();
     this.setSubmitClickHandler(this._callback.onSubmit);
+    this.setDeleteClickHandler(this._callback.onDelete);
   }
 
   _setInnerHandlers() {
@@ -189,11 +202,23 @@ export default class EditTrip extends Smart {
       transport: evt.target.value
     }, true);
   }
+
   _cityInputHandler(evt) {
     evt.preventDefault();
     this.updateData({
       city: evt.target.value
     }, true);
+
+    if(cities.includes(evt.target.value)) {
+      return;
+    }
+  }
+
+  _checkCityInputValue() {
+    let cityInput = this.getElement().querySelector(`.event__input--destination`)
+    if(cities.includes(cityInput.value)) {
+      return;
+    } 
   }
 
   _priceInputHandler(evt) {
@@ -212,6 +237,7 @@ export default class EditTrip extends Smart {
 
   _setDatepicker() {
     if (this._datepicker) {
+      this._datepicker.destroy();
       this._datepicker = null;
     }
 
@@ -234,7 +260,8 @@ export default class EditTrip extends Smart {
 
   setFavoriteClickHandler(callback) {
     this._callback.favoriteClick = callback;
-    this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, this._favoriteClickHandler);
+    this.getElement()
+    .querySelector(`.event__favorite-btn`).addEventListener(`click`, this._favoriteClickHandler);
   }
 
   _formSubmitHandler(evt) {
@@ -246,5 +273,16 @@ export default class EditTrip extends Smart {
     this._callback.onSubmit = callback;
     this.getElement()
     .addEventListener(`submit`, this._formSubmitHandler);
+  }
+
+  _formDeleteHandler(evt) {
+    evt.preventDefault();
+    this._callback.onDelete(EditTrip.parseDataToTrip(this._data));
+  }
+
+  setDeleteClickHandler(callback) {
+    this._callback.onDelete = callback;
+    this.getElement()
+    .querySelector(`.event__reset-btn`).addEventListener(`click`, this._formDeleteHandler);
   }
 }
