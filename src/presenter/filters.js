@@ -1,6 +1,5 @@
 import FilterInput from './../view/filter-item.js';
-import {render, remove} from './../utils/render.js';
-//import {filter} from "./../utils/filter.js";
+import {render} from './../utils/render.js';
 import {FilterType, UpdateType} from "./../const.js";
 
 export default class FilterPresenter {
@@ -29,10 +28,10 @@ export default class FilterPresenter {
 
 
     if (prevFilterComponent === null) {
-        const filtersContainer = this._mainBody.querySelector(`.trip-controls`);
-        render(filtersContainer, this._filterElement);
-        return;
-      }
+      const filtersContainer = this._mainBody.querySelector(`.trip-controls`);
+      render(filtersContainer, this._filterElement);
+      return;
+    }
 
   }
 
@@ -45,11 +44,10 @@ export default class FilterPresenter {
       return;
     }
 
-    this._filtersModel.setFilter(UpdateType.MAJOR, filterType);
+    this._filtersModel.setFilters(UpdateType.MAJOR, filterType);
   }
 
   _getFilters() {
-
     return [
       {
         type: FilterType.PAST,
@@ -65,5 +63,4 @@ export default class FilterPresenter {
       },
     ];
   }
-
 }

@@ -2,7 +2,6 @@ import HeaderContainer from './../view/header-container.js';
 import MainContainer from './../view/main-container.js';
 import TripCounter from './../view/counter.js';
 import Menu from './../view/menu.js';
-import FilterInput from './../view/filter-item.js';
 import SortContainer from './../view/sorting-container.js';
 import FirstTripEvent from './../view/first-trip/first-trip-container.js';
 import TripListContainer from './../view/trip/trip-list-container.js';
@@ -11,7 +10,6 @@ import {render, remove} from './../utils/render.js';
 import {filter} from "./../utils/filters.js";
 import {SortType, UpdateType, UserAction} from './../const.js';
 import TripPresenter from './trip';
-import FiltersPresenter from './filters';
 
 export default class TripBoard {
   constructor(mainBody, tripModel, filtersModel) {
@@ -53,7 +51,10 @@ export default class TripBoard {
     //     return this._tripsModel.getTrips().slice().sort(sortTripByPrice);
     // }
 
-    return this._tripsModel.getTrips();
+    const filterType = this._filtersModel.getFilters();
+    const trips = this._tripsModel.getTrips();
+    const filtredTrips = filter[filterType](trips);
+    return filtredTrips;
   }
 
   _handleModeChange() {
@@ -101,8 +102,6 @@ export default class TripBoard {
     this._clearBoard(resetSortType = true);
     this._tripList();
   }
-
-
 
   _renderCounter() {
     this._TripCounter = new TripCounter();
@@ -162,10 +161,10 @@ export default class TripBoard {
     this._tripPresenter = {};
 
     remove(this._SortingContainer);
-    //remove(this._noTripContainer);
-    remove(this._TripListContainer)
+    // remove(this._noTripContainer);
+    remove(this._TripListContainer);
 
-      this._renderedTripCount = Math.min(tripCount, this._renderedTripCount);
+    this._renderedTripCount = Math.min(tripCount, this._renderedTripCount);
 
     if (resetSortType) {
       this._currentSortType = SortType.EVENT;
@@ -175,18 +174,17 @@ export default class TripBoard {
   _tripBoard() {
     this._renderCounter();
     this._renderMenuContainer();
-    // this._renderFirstTrip();
   }
 
   _tripList() {
     const trips = this._getTrips();
     const tripCount = trips.length;
-    if (tripCount === 0) {
-      this._renderNoTrips();
-      return;
-    }
+    // if (tripCount === 0) {
+    //   this._renderNoTrips();
+    //   return;
+    // }
     this._renderSorting();
     this._renderTripDayListContainer();
-    this._renderTripItemsList()
+    this._renderTripItemsList();
   }
 }

@@ -3,8 +3,8 @@ import {FilterType} from "./../const";
 
 export default class FiltersModel extends Observer {
   constructor() {
-      super();
-      this._activeFilter = FilterType.EVERYTHING;
+    super();
+    this._activeFilter = FilterType.EVERYTHING;
   }
 
   setFilters(updateType, filter) {

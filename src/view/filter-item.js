@@ -11,7 +11,6 @@ const addFilterItem = (filters, currentFilterType) => {
 export default class FilterInput extends Abstract {
   constructor(filters, currentFilterType) {
     super();
-    //this._i = i;
     this._filters = filters;
     this._currentFilter = currentFilterType;
 
@@ -35,6 +34,6 @@ export default class FilterInput extends Abstract {
 
   setFilterTypeChangeHandler(callback) {
     this._callback.filterTypeChange = callback;
-    this.getElement().querySelector(`.trip-filters__filter-input`).addEventListener(`change`, this._filterTypeChangeHandler);
+    this.getElement().addEventListener(`change`, this._filterTypeChangeHandler);
   }
 }
