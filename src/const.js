@@ -1,4 +1,4 @@
-export const TRIP_COUNT = 17;
+export const TRIP_COUNT = 20;
 
 export const offerDescription = [{
   name: `Add luggage`,
