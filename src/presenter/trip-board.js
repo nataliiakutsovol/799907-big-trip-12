@@ -95,7 +95,7 @@ export default class TripBoard {
     }
   }
 
-  _handleSortTypeChange(sortType, resetSortType) {
+  _handleSortTypeChange(sortType) {
     if (this._currentSortType === sortType) {
       return;
     }
