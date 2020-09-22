@@ -37,12 +37,17 @@ export default class TripBoard {
   }
 
   init() {
-    render(this._mainBody, this._MainContainer, true);
-    render(this._mainBody, this._HeaderContainer, true);
+    render(this._mainBody, this._MainContainer);
     this._tripBoard();
     this._tripList();
   }
 
+  destroy() {
+    this._clearBoard({resetRenderedTaskCount: true, resetSortType: true});
+    this._tripsModel.removeObserver(this._handleModelEvent);
+    this._filtersModel.removeObserver(this._handleModelEvent);
+    remove(this._MainContainer);
+  }
   _getTrips() {
     // switch (this._currentSortType) {
     //   case SortType.EVENT:
@@ -111,11 +116,6 @@ export default class TripBoard {
     render(tripCounterSection, this._TripCounter, true);
   }
 
-  _renderMenuContainer() {
-    const menuContainer = this._HeaderContainer.getElement().querySelector(`.trip-controls`);
-    render(menuContainer, this._MenuContainer);
-  }
-
   _renderSorting() {
     render(this._MainContainer, this._SortingContainer);
   }
@@ -167,7 +167,6 @@ export default class TripBoard {
     this._tripPresenter = {};
 
     remove(this._SortingContainer);
-    remove(this._noTripsContainer);
     remove(this._TripListContainer);
 
     this._renderedTripCount = Math.min(tripCount, this._renderedTripCount);
@@ -179,7 +178,6 @@ export default class TripBoard {
 
   _tripBoard() {
     this._renderCounter();
-    this._renderMenuContainer();
   }
 
   _tripList() {

@@ -1,3 +1,7 @@
+import HeaderContainer from './view/header-container.js';
+import MainContainer from './view/main-container.js';
+import Menu from './view/menu.js';
+import Stats from './view/stats';
 // first trip details
 import EventTypeIconSection from './view/event-type-icon.js';
 import EventDestination from './view/first-trip/event-destination.js';
@@ -11,15 +15,16 @@ import Buttons from './view/buttons.js';
 import TripDetails from './view/first-trip/trip-details-container.js';
 import TripOffers from './view/first-trip/trip-details-offers.js';
 import TripDestignation from './view/first-trip/trip-details-destignation';
-import FilterInput from './view/filter-item.js';
 // mocks
 import {generateTrip} from './mock/trip-item.js';
-import {TRIP_COUNT, transferValue, registrationText, btnObj} from './const.js';
-import {render} from './utils/render.js';
+import {TRIP_COUNT, MenuItem, transferValue, registrationText, btnObj} from './const.js';
+import {remove, render} from './utils/render.js';
 import TripBoard from "./presenter/trip-board.js";
 import FiltersPresenter from "./presenter/filters.js";
 import TripsModel from "./model/trip";
 import FiltersModel from "./model/filters";
+
+const mainBody = document.querySelector(`.page-body`);
 
 const trips = new Array(TRIP_COUNT).fill().map(generateTrip);
 const tripsModel = new TripsModel();
@@ -27,14 +32,42 @@ tripsModel.setTrips(trips);
 
 const filtersModel = new FiltersModel();
 
-const mainBody = document.querySelector(`.page-body`);
-
 const boardPresenter = new TripBoard(mainBody, tripsModel, filtersModel);
 boardPresenter.init();
 
+// main body components
+render(mainBody, new HeaderContainer(), true);
 const filtersPresenter = new FiltersPresenter(mainBody, tripsModel, filtersModel);
 filtersPresenter.init();
-// main body components
+
+const handleSiteMenuClick = (menuItem) => {
+  switch (menuItem) {
+    case MenuItem.TABLE:
+      remove(tripsStatistics);
+      boardPresenter.init();
+      break;
+    case MenuItem.STATISTICS:
+      boardPresenter.destroy();
+      render(mainBody, new MainContainer());
+      render(statisticsContainer, tripsStatistics);
+      break;
+  }
+};
+
+const handleTaskNewFormClose = () => {
+  siteMenuComponent.getElement().querySelector(`[href=${MenuItem.TABLE}]`).disabled = false;
+  siteMenuComponent.setMenuItem(MenuItem.TABLE);
+};
+
+const siteMenuComponent = new Menu();
+siteMenuComponent.setMenuItem(MenuItem.TABLE);
+const menuContainer = mainBody.querySelector(`.trip-controls`);
+siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
+render(menuContainer, siteMenuComponent, true);
+
+const tripsStatistics = new Stats(tripsModel.getTrips());
+const statisticsContainer = mainBody.querySelector(`.page-main`);
+
 // const mainContainer = mainBody.querySelector(`.page-main`);
 // const tripDetailsContainer = mainContainer.querySelector(`.event--edit`);
 // render(tripDetailsContainer, new TripDetails().getElement());

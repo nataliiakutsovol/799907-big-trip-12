@@ -52,3 +52,8 @@ export const UpdateType = {
   MINOR: `MINOR`,
   MAJOR: `MAJOR`
 };
+
+export const MenuItem = {
+  TABLE: `table`,
+  STATISTICS: `statistics`
+};
