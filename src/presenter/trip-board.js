@@ -1,3 +1,4 @@
+import NoTripsContainer from "./../view/no-trips";
 import HeaderContainer from './../view/header-container.js';
 import MainContainer from './../view/main-container.js';
 import Menu from './../view/menu.js';
@@ -19,6 +20,7 @@ export default class TripBoard {
     this._MenuContainer = new Menu();
     this._SortingContainer = new SortContainer();
     this._TripListContainer = new TripListContainer();
+    this._NoTripsContainer = new NoTripsContainer();
     this._currentSortType = SortType.EVENT;
     this._tripPresenter = {};
     this._filtersPresenter = {};
@@ -143,6 +145,10 @@ export default class TripBoard {
     this._tripPresenter[trip.id] = tripPresenter;
   }
 
+  _renderNoTrips() {
+    render(this._MainContainer, this._NoTripsContainer);
+  }
+
   _clearBoard({resetSortType = false} = {}) {
     const tripCount = this._getTrips().length;
 
@@ -152,7 +158,7 @@ export default class TripBoard {
     this._tripPresenter = {};
 
     remove(this._SortingContainer);
-    // remove(this._noTripContainer);
+    remove(this._noTripsContainer);
     remove(this._TripListContainer);
 
     this._renderedTripCount = Math.min(tripCount, this._renderedTripCount);
@@ -167,12 +173,12 @@ export default class TripBoard {
   }
 
   _tripList() {
-    // const trips = this._getTrips();
-    // const tripCount = trips.length;
-    // if (tripCount === 0) {
-    //   this._renderNoTrips();
-    //   return;
-    // }
+    const trips = this._getTrips();
+    const tripCount = trips.length;
+    if (tripCount === 0) {
+      this._renderNoTrips();
+      return;
+    }
     this._renderSorting();
     this._renderTripDayListContainer();
     this._renderTripItemsList();
