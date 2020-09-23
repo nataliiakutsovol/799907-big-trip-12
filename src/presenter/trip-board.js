@@ -2,7 +2,6 @@ import HeaderContainer from './../view/header-container.js';
 import MainContainer from './../view/main-container.js';
 import Menu from './../view/menu.js';
 import SortContainer from './../view/sorting-container.js';
-import FirstTripEvent from './../view/first-trip/first-trip-container.js';
 import TripListContainer from './../view/trip/trip-list-container.js';
 import TripDayList from './../view/trip/trip-day-list.js';
 import {render, remove} from './../utils/render.js';
@@ -19,7 +18,6 @@ export default class TripBoard {
     this._HeaderContainer = new HeaderContainer();
     this._MenuContainer = new Menu();
     this._SortingContainer = new SortContainer();
-    this._FirstTripContainer = new FirstTripEvent();
     this._TripListContainer = new TripListContainer();
     this._currentSortType = SortType.EVENT;
     this._tripPresenter = {};
@@ -98,7 +96,7 @@ export default class TripBoard {
     }
 
     this._sortTrips(sortType);
-    this._clearBoard(resetSortType = true);
+    this._clearBoard();
     this._tripList();
   }
 
@@ -111,9 +109,9 @@ export default class TripBoard {
     render(this._MainContainer, this._SortingContainer);
   }
 
-  _renderFirstTrip() {
-    render(this._SortingContainer, this._FirstTripContainer);
-  }
+  // _renderFirstTrip() {
+  //   render(this._SortingContainer, this._FirstTripContainer);
+  // }
 
   _renderTripDayListContainer() {
     render(this._SortingContainer, this._TripListContainer);
@@ -169,8 +167,8 @@ export default class TripBoard {
   }
 
   _tripList() {
-    const trips = this._getTrips();
-    const tripCount = trips.length;
+    // const trips = this._getTrips();
+    // const tripCount = trips.length;
     // if (tripCount === 0) {
     //   this._renderNoTrips();
     //   return;

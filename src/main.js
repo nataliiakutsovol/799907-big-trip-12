@@ -1,21 +1,21 @@
 import TripCounter from './view/counter.js';
 // first trip details
-import EventTypeIconSection from './view/event-type-icon.js';
-import EventDestination from './view/first-trip/event-destination.js';
-import EventTime from './view/first-trip/event-time.js';
-import EventPrice from './view/first-trip/event-price.js';
-import TransferList from './view/first-trip/transfer-list.js';
-import TransferInput from './view/first-trip/transfer-item.js';
-import RegistrationList from './view/first-trip/registration-list.js';
-import RegistrationInput from './view/first-trip/registration-item.js';
-import Buttons from './view/buttons.js';
-import TripDetails from './view/first-trip/trip-details-container.js';
-import TripOffers from './view/first-trip/trip-details-offers.js';
-import TripDestignation from './view/first-trip/trip-details-destignation';
-import FilterInput from './view/filter-item.js';
+// import EventTypeIconSection from './view/event-type-icon.js';
+// import EventDestination from './view/first-trip/event-destination.js';
+// import EventTime from './view/first-trip/event-time.js';
+// import EventPrice from './view/first-trip/event-price.js';
+// import TransferList from './view/first-trip/transfer-list.js';
+// import TransferInput from './view/first-trip/transfer-item.js';
+// import RegistrationList from './view/first-trip/registration-list.js';
+// import RegistrationInput from './view/first-trip/registration-item.js';
+// import Buttons from './view/buttons.js';
+// import TripDetails from './view/first-trip/trip-details-container.js';
+// import TripOffers from './view/first-trip/trip-details-offers.js';
+// import TripDestignation from './view/first-trip/trip-details-destignation';
+// import FilterInput from './view/filter-item.js';
 // mocks
 import {generateTrip} from './mock/trip-item.js';
-import {TRIP_COUNT, transferValue, registrationText, btnObj} from './const.js';
+import {TRIP_COUNT} from './const.js';
 import {render} from './utils/render.js';
 import TripBoard from "./presenter/trip-board.js";
 import FiltersPresenter from "./presenter/filters.js";
@@ -25,8 +25,6 @@ import FiltersModel from "./model/filters";
 const trips = new Array(TRIP_COUNT).fill().map(generateTrip);
 const tripsModel = new TripsModel();
 tripsModel.setTrips(trips);
-
-
 
 const filtersModel = new FiltersModel();
 
