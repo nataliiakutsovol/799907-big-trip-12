@@ -7,8 +7,9 @@ import TripListContainer from './../view/trip/trip-list-container.js';
 import TripDayList from './../view/trip/trip-day-list.js';
 import {render, remove} from './../utils/render.js';
 import {filter} from "./../utils/filters.js";
-import {SortType, UpdateType, UserAction} from './../const.js';
+import {SortType, FilterType, UpdateType, UserAction} from './../const.js';
 import TripPresenter from './trip';
+import FirstTripPresenter from "./first-trip.js";
 
 export default class TripBoard {
   constructor(mainBody, tripModel, filtersModel) {
@@ -24,11 +25,10 @@ export default class TripBoard {
     this._currentSortType = SortType.EVENT;
     this._tripPresenter = {};
     this._filtersPresenter = {};
-
+    this._firstTripPresenter = new FirstTripPresenter(this._TripListContainer, this._handleViewAction);
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
-
     this._tripsModel.addObserver(this._handleModelEvent);
     this._filtersModel.addObserver(this._handleModelEvent);
   }
@@ -38,6 +38,12 @@ export default class TripBoard {
     render(this._mainBody, this._HeaderContainer, true);
     this._tripBoard();
     this._tripList();
+  }
+
+  createTrip() {
+    this._currentSortType = SortType.EVENT;
+    this._filtersModel.getFilters(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this._firstTripPresenter.init();
   }
 
   _getTrips() {
@@ -57,6 +63,7 @@ export default class TripBoard {
   }
 
   _handleModeChange() {
+    this._firstTripPresenter.destroy();
     Object
       .values(this._tripPresenter)
       .forEach((presenter) => presenter.resetView());
@@ -151,6 +158,7 @@ export default class TripBoard {
 
   _clearBoard({resetSortType = false} = {}) {
     const tripCount = this._getTrips().length;
+    this._firstTripPresenter.destroy();
 
     Object
       .values(this._tripPresenter)
@@ -158,7 +166,6 @@ export default class TripBoard {
     this._tripPresenter = {};
 
     remove(this._SortingContainer);
-    remove(this._noTripsContainer);
     remove(this._TripListContainer);
 
     this._renderedTripCount = Math.min(tripCount, this._renderedTripCount);

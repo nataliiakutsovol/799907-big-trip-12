@@ -109,6 +109,7 @@ export default class TripPresenter {
 
   _formSubmitHandler(trip) {
     this._changeData(
+
         UserAction.UPDATE_TRIP,
         UpdateType.MINOR,
         trip);

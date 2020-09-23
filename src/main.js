@@ -1,14 +1,5 @@
 import TripCounter from './view/counter.js';
 // first trip details
-// import EventTypeIconSection from './view/event-type-icon.js';
-// import EventDestination from './view/first-trip/event-destination.js';
-// import EventTime from './view/first-trip/event-time.js';
-// import EventPrice from './view/first-trip/event-price.js';
-// import TransferList from './view/first-trip/transfer-list.js';
-// import TransferInput from './view/first-trip/transfer-item.js';
-// import RegistrationList from './view/first-trip/registration-list.js';
-// import RegistrationInput from './view/first-trip/registration-item.js';
-// import Buttons from './view/buttons.js';
 // import TripDetails from './view/first-trip/trip-details-container.js';
 // import TripOffers from './view/first-trip/trip-details-offers.js';
 // import TripDestignation from './view/first-trip/trip-details-destignation';
@@ -38,6 +29,12 @@ filtersPresenter.init();
 
 const tripCounterSection = mainBody.querySelector(`.trip-main`);
 render(tripCounterSection, new TripCounter(tripsModel), true);
+
+document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, (evt) => {
+  evt.preventDefault();
+  boardPresenter.createTrip();
+});
+
 // main body components
 // const mainContainer = mainBody.querySelector(`.page-main`);
 // const tripDetailsContainer = mainContainer.querySelector(`.event--edit`);

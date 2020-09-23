@@ -5,15 +5,22 @@ import "./../../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 const addOfferSelectors = (data) => {
   const {offers} = data;
-  return offers.map((offer, i) =>
+  return offers ? `<div class="event__available-offers">
+    <section class="event__section  event__section--offers">
+      <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+      <div class="event__available-offers">
+      ${offers.map((offer, i) =>
     `<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-train-${i + 1}" type="checkbox" name="event-offer-train">
-      <label class="event__offer-label" for="event-offer-train-${i + 1}">
-        <span class="event__offer-title">${offer.name}</span>
-        &plus;
-        &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
-      </label>
-    </div>`).join(``);
+          <input class="event__offer-checkbox  visually-hidden" id="event-offer-train-${i + 1}" type="checkbox" name="event-offer-train">
+          <label class="event__offer-label" for="event-offer-train-${i + 1}">
+            <span class="event__offer-title">${offer.name}</span>
+            &plus;
+            &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
+          </label>
+        </div>`).join(``)}
+      </div>
+    </section>
+  </div>` : ` `;
 };
 
 const addCitiesList = () => {
@@ -37,6 +44,15 @@ const addRegistrationList = () => {
     </div>`).join(` `);
 };
 
+const BLANK_TRIP = {
+  type: null,
+  city: null,
+  date: new Date(),
+  timeStart: new Date(),
+  timeEnd: new Date(),
+  offers: [],
+  isFavorite: false,
+};
 
 const addEditTripContainer = (data, i) => {
   const {type, city, isDate, price, isFavorite} = data;
@@ -51,7 +67,7 @@ const addEditTripContainer = (data, i) => {
       <div class="event__type-wrapper">
         <label class="event__type  event__type-btn" for="event-type-toggle">
           <span class="visually-hidden">Choose event type</span>
-          <img class="event__type-icon" width="17" height="17" src="img/icons/${type.name}.png" alt="Event type icon">
+          <img class="event__type-icon" width="17" height="17" src="img/icons/${type ? type.name : `bus`}.png" alt="Event type icon">
         </label>
         <input class="event__type-toggle  visually-hidden" id="event-type-toggle" type="checkbox">
   
@@ -69,9 +85,9 @@ const addEditTripContainer = (data, i) => {
 
       <div class="event__field-group  event__field-group--destination">
         <label class="event__label  event__type-output" for="event-destination">
-        ${type.label}
+        ${type ? type.label : `Bus to `}
         </label>
-        <input class="event__input  event__input--destination" id="event-destination" type="text" name="event-destination" value="${city}" list="destination-list-1">
+        <input class="event__input  event__input--destination" id="event-destination" type="text" name="event-destination" value="${city ? city : ``}" list="destination-list-1">
         <datalist id="destination-list-1">
         ${citiesListTemplate}
         </datalist>
@@ -94,7 +110,7 @@ const addEditTripContainer = (data, i) => {
           <span class="visually-hidden">Price</span>
           &euro;
         </label>
-        <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${price}">
+        <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${price ? price : ``}">
       </div>
 
       <button class="event__save-btn  btn  btn--blue" type="submit" >Save</button>
@@ -114,20 +130,16 @@ const addEditTripContainer = (data, i) => {
     </header>
 
     <section class="event__details">
-      <section class="event__section  event__section--offers">
-        <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
-        <div class="event__available-offers">
+      
           ${offerDescriptionTemplate}
-        </div>
-      </section>
+        
     </section>
   </form>`
   );
 };
 
 export default class EditTrip extends Smart {
-  constructor(trip = null, i) {
+  constructor(trip = BLANK_TRIP, i) {
     super();
     this._i = i;
     this._data = EditTrip.parseTripToData(trip);
@@ -149,6 +161,7 @@ export default class EditTrip extends Smart {
     super.removeElement();
 
     if (this._datepicker) {
+      // this._datepicker.destroy();
       this._datepicker = null;
     }
   }
@@ -192,7 +205,7 @@ export default class EditTrip extends Smart {
   }
 
   _setInnerHandlers() {
-    this.getElement().addEventListener(`input`, this._eventTypeInputHandler);
+    this.getElement().querySelector(`.event__type-list`).addEventListener(`input`, this._eventTypeInputHandler);
     this.getElement().querySelector(`.event__input--destination`).addEventListener(`input`, this._cityInputHandler);
     this.getElement().querySelector(`.event__input--price`).addEventListener(`input`, this._priceInputHandler);
   }
@@ -242,7 +255,6 @@ export default class EditTrip extends Smart {
       this._datepicker.destroy();
       this._datepicker = null;
     }
-
     if (this._data.isDate) {
       this._datepicker = flatpickr(
           this.getElement().querySelectorAll(`.event__input--time`),
