@@ -95,13 +95,13 @@ export default class TripBoard {
     }
   }
 
-  _handleSortTypeChange(sortType, resetSortType) {
+  _handleSortTypeChange(sortType) {
     if (this._currentSortType === sortType) {
       return;
     }
 
     this._sortTrips(sortType);
-    this._clearBoard(resetSortType = true);
+    this._clearBoard();
     this._tripList();
   }
 
