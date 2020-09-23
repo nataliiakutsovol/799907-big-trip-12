@@ -1,3 +1,4 @@
+import TripCounter from './view/counter.js';
 // first trip details
 import EventTypeIconSection from './view/event-type-icon.js';
 import EventDestination from './view/first-trip/event-destination.js';
@@ -25,6 +26,8 @@ const trips = new Array(TRIP_COUNT).fill().map(generateTrip);
 const tripsModel = new TripsModel();
 tripsModel.setTrips(trips);
 
+
+
 const filtersModel = new FiltersModel();
 
 const mainBody = document.querySelector(`.page-body`);
@@ -34,6 +37,9 @@ boardPresenter.init();
 
 const filtersPresenter = new FiltersPresenter(mainBody, tripsModel, filtersModel);
 filtersPresenter.init();
+
+const tripCounterSection = mainBody.querySelector(`.trip-main`);
+render(tripCounterSection, new TripCounter(tripsModel), true);
 // main body components
 // const mainContainer = mainBody.querySelector(`.page-main`);
 // const tripDetailsContainer = mainContainer.querySelector(`.event--edit`);

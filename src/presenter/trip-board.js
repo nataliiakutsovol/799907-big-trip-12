@@ -1,6 +1,5 @@
 import HeaderContainer from './../view/header-container.js';
 import MainContainer from './../view/main-container.js';
-import TripCounter from './../view/counter.js';
 import Menu from './../view/menu.js';
 import SortContainer from './../view/sorting-container.js';
 import FirstTripEvent from './../view/first-trip/first-trip-container.js';
@@ -103,12 +102,6 @@ export default class TripBoard {
     this._tripList();
   }
 
-  _renderCounter() {
-    this._TripCounter = new TripCounter();
-    const tripCounterSection = this._HeaderContainer.getElement().querySelector(`.trip-main`);
-    render(tripCounterSection, this._TripCounter, true);
-  }
-
   _renderMenuContainer() {
     const menuContainer = this._HeaderContainer.getElement().querySelector(`.trip-controls`);
     render(menuContainer, this._MenuContainer);
@@ -172,7 +165,6 @@ export default class TripBoard {
   }
 
   _tripBoard() {
-    this._renderCounter();
     this._renderMenuContainer();
   }
 

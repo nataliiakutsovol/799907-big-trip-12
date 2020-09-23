@@ -17,9 +17,47 @@ export const filterValue = [`past`, `future`, `everything`];
 
 export const sortId = [`event`, `time`, `price`];
 
-export const transferValue = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`];
+export const eventTransferType = [{
+  name: `taxi`,
+  label: `Taxi to `,
+},
+{
+  name: `bus`,
+  label: `Bus to `,
+},
+{
+  name: `train`,
+  label: `Train to `,
+},
+{
+  name: `ship`,
+  label: `Ship to `,
+},
+{
+  name: `transport`,
+  label: `Transport to `,
+},
+{
+  name: `drive`,
+  label: `Drive to `,
+},
+{
+  name: `flight`,
+  label: `Flight to `,
+}];
 
-export const registrationText = [`Check-in`, `Sightseeing`, `Restaurant`];
+export const eventRegistrationType = [{
+  name: `check-in`,
+  label: `Check-in `,
+},
+{
+  name: `sightseeing`,
+  label: `Sightseeing to `,
+},
+{
+  name: `restaurant`,
+  label: `Restaurant in `,
+}];
 
 export const cities = [`Rome`, `New York`, `Milan`, `Paris`, `Berlin`];
 

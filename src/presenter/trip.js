@@ -19,6 +19,7 @@ export default class TripPresenter {
 
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
     this._editClickHandler = this._editClickHandler.bind(this);
+    this._tripClickHandler = this._tripClickHandler.bind(this);
     this._addToFavoriteHandler = this._addToFavoriteHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._formDeleteHandler = this._formDeleteHandler.bind(this);
@@ -35,6 +36,7 @@ export default class TripPresenter {
     this._tripEditElement = new EditTrip(trip);
 
     this._tripElement.setEditTripClickHandler(this._editClickHandler);
+    this._tripEditElement.setTripClickHandler(this._tripClickHandler);
     this._tripEditElement.setFavoriteClickHandler(this._addToFavoriteHandler);
     this._tripEditElement.setSubmitClickHandler(this._formSubmitHandler);
     this._tripEditElement.setDeleteClickHandler(this._formDeleteHandler);
@@ -81,6 +83,10 @@ export default class TripPresenter {
       this._tripEditElement.reset(this._trip);
       this._replaceEditToTrip();
     }
+  }
+
+  _tripClickHandler() {
+    this._replaceEditToTrip();
   }
 
   _editClickHandler() {

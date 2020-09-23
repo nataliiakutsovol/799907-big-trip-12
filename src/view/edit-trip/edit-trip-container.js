@@ -1,5 +1,5 @@
 import Smart from "./../smart";
-import {cities, registrationText, transferValue} from "../../const.js";
+import {cities, eventRegistrationType, eventTransferType} from "../../const.js";
 import flatpickr from "flatpickr";
 import "./../../../node_modules/flatpickr/dist/flatpickr.min.css";
 
@@ -22,24 +22,24 @@ const addCitiesList = () => {
 };
 
 const addTransferList = () => {
-  return transferValue.map((transfer) =>
+  return eventTransferType.map((transfer) =>
     `<div class="event__type-item">
-      <input id="event-type-${transfer.toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${transfer.toLowerCase()}">
-      <label class="event__type-label  event__type-label--${transfer.toLowerCase()}" for="event-type-${transfer.toLowerCase()}-1">${transfer}</label>
+      <input id="event-type-${transfer.name}-1" class="event__type-input  visually-hidden" type="radio" name="${transfer.label}" value="${transfer.name}">
+      <label class="event__type-label  event__type-label--${transfer.name}" for="event-type-${transfer.name}-1">${transfer.name.charAt(0).toUpperCase() + transfer.name.substr(1)}</label>
     </div>`).join(``);
 };
 
 const addRegistrationList = () => {
-  return registrationText.map((registration) =>
+  return eventRegistrationType.map((registration) =>
     `<div class="event__type-item">
-      <input id="event-type-${registration.toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${registration.toLowerCase()}">
-      <label class="event__type-label  event__type-label--${registration.toLowerCase()}" for="event-type-${registration.toLowerCase()}-1">${registration}</label>
+      <input id="event-type-${registration.name}-1" class="event__type-input  visually-hidden" type="radio" name="${registration.label}" value="${registration.name}">
+      <label class="event__type-label  event__type-label--${registration.name}" for="event-type-${registration.name}-1">${registration.name.charAt(0).toUpperCase() + registration.name.substr(1)}</label>
     </div>`).join(` `);
 };
 
 
 const addEditTripContainer = (data, i) => {
-  const {transport, city, isDate, price, isFavorite} = data;
+  const {type, city, isDate, price, isFavorite} = data;
   const offerDescriptionTemplate = addOfferSelectors(data);
   const citiesListTemplate = addCitiesList(i);
   const transferListTemplate = addTransferList(i);
@@ -51,7 +51,7 @@ const addEditTripContainer = (data, i) => {
       <div class="event__type-wrapper">
         <label class="event__type  event__type-btn" for="event-type-toggle">
           <span class="visually-hidden">Choose event type</span>
-          <img class="event__type-icon" width="17" height="17" src="img/icons/bus.png" alt="Event type icon">
+          <img class="event__type-icon" width="17" height="17" src="img/icons/${type.name}.png" alt="Event type icon">
         </label>
         <input class="event__type-toggle  visually-hidden" id="event-type-toggle" type="checkbox">
   
@@ -69,7 +69,7 @@ const addEditTripContainer = (data, i) => {
 
       <div class="event__field-group  event__field-group--destination">
         <label class="event__label  event__type-output" for="event-destination">
-        ${transport}
+        ${type.label}
         </label>
         <input class="event__input  event__input--destination" id="event-destination" type="text" name="event-destination" value="${city}" list="destination-list-1">
         <datalist id="destination-list-1">
@@ -140,6 +140,7 @@ export default class EditTrip extends Smart {
     this._cityInputHandler = this._cityInputHandler.bind(this);
     this._checkCityInputValue = this._checkCityInputValue(this);
     this._priceInputHandler = this._priceInputHandler.bind(this);
+    this._tripClickHandler = this._tripClickHandler.bind(this);
     this._setInnerHandlers();
     this._setDatepicker();
   }
@@ -191,7 +192,7 @@ export default class EditTrip extends Smart {
   }
 
   _setInnerHandlers() {
-    this.getElement().querySelector(`.event__type-item`).addEventListener(`click`, this._eventTypeInputHandler);
+    this.getElement().addEventListener(`input`, this._eventTypeInputHandler);
     this.getElement().querySelector(`.event__input--destination`).addEventListener(`input`, this._cityInputHandler);
     this.getElement().querySelector(`.event__input--price`).addEventListener(`input`, this._priceInputHandler);
   }
@@ -199,7 +200,10 @@ export default class EditTrip extends Smart {
   _eventTypeInputHandler(evt) {
     evt.preventDefault();
     this.updateData({
-      transport: evt.target.value
+      type: {
+        name: evt.target.value,
+        label: evt.target.name
+      }
     }, true);
   }
 
@@ -282,5 +286,15 @@ export default class EditTrip extends Smart {
     this._callback.onDelete = callback;
     this.getElement()
     .querySelector(`.event__reset-btn`).addEventListener(`click`, this._formDeleteHandler);
+  }
+
+  _tripClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.tripClick();
+  }
+
+  setTripClickHandler(callback) {
+    this._callback.tripClick = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._tripClickHandler);
   }
 }

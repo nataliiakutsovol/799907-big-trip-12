@@ -1,16 +1,8 @@
 import {getRandomInteger} from "../utils/common.js";
-import {offerDescription} from "../const.js";
+import {eventTransferType, eventRegistrationType, offerDescription} from "../const.js";
 
-const generateIcons = () => {
-  const descriptions = [`drive`, `sightseeing`, `flight`, `ship`, `bus`];
-
-  const randomIndex = getRandomInteger(0, descriptions.length - 1);
-
-  return descriptions[randomIndex];
-};
-
-const generateTransport = () => {
-  const descriptions = [`Drive to `, `Sightseeing in `, `Flight to `, `Ship to `, `Bus to `];
+const generateType = () => {
+  const descriptions = [...eventTransferType, ...eventRegistrationType];
 
   const randomIndex = getRandomInteger(0, descriptions.length - 1);
 
@@ -69,8 +61,7 @@ export const generateTrip = () => {
   const offerArr = new Array(MAX_OFFERS).fill().map(generateOffers);
   return {
     id: generateId(),
-    icons: generateIcons(),
-    transport: generateTransport(),
+    type: generateType(),
     city: generateCity(),
     date: generateDate(),
     timeStart: generateTimeRange(),
