@@ -25,7 +25,7 @@ export default class TripBoard {
     this._currentSortType = SortType.EVENT;
     this._tripPresenter = {};
     this._filtersPresenter = {};
-    this._firstTripPresenter = new FirstTripPresenter(this._TripListContainer, this._handleViewAction);
+    this._firstTripPresenter = new FirstTripPresenter(this._TripListContainer, this._handleViewAction, this._tripsModel);
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
@@ -117,10 +117,6 @@ export default class TripBoard {
   _renderSorting() {
     render(this._MainContainer, this._SortingContainer);
   }
-
-  // _renderFirstTrip() {
-  //   render(this._SortingContainer, this._FirstTripContainer);
-  // }
 
   _renderTripDayListContainer() {
     render(this._SortingContainer, this._TripListContainer);

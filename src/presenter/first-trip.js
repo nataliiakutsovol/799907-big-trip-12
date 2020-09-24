@@ -4,14 +4,15 @@ import {generateId} from "./../mock/trip-item";
 import {UpdateType, UserAction} from './../const.js';
 
 export default class FirstTripPresenter {
-  constructor(TripListContainer, changeData) {
+  constructor(TripListContainer, changeData, tripsModel) {
     this._TripListContainer = TripListContainer;
     this._changeData = changeData;
+    this._tripsModel = tripsModel;
     this._tripEditElement = null;
-
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._formDeleteHandler = this._formDeleteHandler.bind(this);
+    this._tripClickHandler = this._tripClickHandler.bind(this);
   }
 
   init() {
@@ -20,6 +21,7 @@ export default class FirstTripPresenter {
     }
 
     this._tripEditElement = new EditTrip();
+    this._tripEditElement.setTripClickHandler(this._tripClickHandler);
     this._tripEditElement.setSubmitClickHandler(this._formSubmitHandler);
     this._tripEditElement.setDeleteClickHandler(this._formDeleteHandler);
 
@@ -49,6 +51,10 @@ export default class FirstTripPresenter {
   }
 
   _formDeleteHandler() {
+    this.destroy();
+  }
+
+  _tripClickHandler() {
     this.destroy();
   }
 
