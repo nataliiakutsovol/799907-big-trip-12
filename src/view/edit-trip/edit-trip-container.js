@@ -31,7 +31,7 @@ const addCitiesList = () => {
 const addTransferList = () => {
   return eventTransferType.map((transfer) =>
     `<div class="event__type-item">
-      <input id="event-type-${transfer.name}-1" class="event__type-input  visually-hidden" type="radio" name="${transfer.label}" value="${transfer.name}">
+      <input id="event-type-${transfer.name}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" title="${transfer.label}" value="${transfer.name}">
       <label class="event__type-label  event__type-label--${transfer.name}" for="event-type-${transfer.name}-1">${transfer.name.charAt(0).toUpperCase() + transfer.name.substr(1)}</label>
     </div>`).join(``);
 };
@@ -39,7 +39,7 @@ const addTransferList = () => {
 const addRegistrationList = () => {
   return eventRegistrationType.map((registration) =>
     `<div class="event__type-item">
-      <input id="event-type-${registration.name}-1" class="event__type-input  visually-hidden" type="radio" name="${registration.label}" value="${registration.name}">
+      <input id="event-type-${registration.name}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" title="${registration.label}" value="${registration.name}">
       <label class="event__type-label  event__type-label--${registration.name}" for="event-type-${registration.name}-1">${registration.name.charAt(0).toUpperCase() + registration.name.substr(1)}</label>
     </div>`).join(` `);
 };
@@ -217,9 +217,10 @@ export default class EditTrip extends Smart {
     this.updateData({
       type: {
         name: evt.target.value,
-        label: evt.target.name
+        label: evt.target.title
       }
     }, true);
+    debugger
   }
 
   _cityInputHandler(evt) {
