@@ -284,7 +284,7 @@ export default class EditTrip extends Smart {
     const offers = [];
     offers.push(offer);
     this.updateData({
-      offers: [offers]
+      offers: offers
     }, true);
   }
 
@@ -292,7 +292,7 @@ export default class EditTrip extends Smart {
     evt.preventDefault();
     const type = [...eventTransferType, ...eventRegistrationType].find((c) => c.name === evt.target.value);
     this.updateData({
-      type: [type]
+      type: type
     }, true);
     this._callback.evenTypeClick(this._data);
   }

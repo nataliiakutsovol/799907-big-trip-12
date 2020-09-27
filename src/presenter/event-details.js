@@ -6,7 +6,6 @@ export default class EventDetailsPresenter {
     this._tripsModel = tripsModel;
     this._eventTypeModel = eventTypeModel;
     this._tripEditElement = null;
-    this._addEventTypeHandler = this._addEventTypeHandler.bind(this);
   }
 
   init(trip) {
