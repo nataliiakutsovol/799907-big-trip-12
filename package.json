@@ -5,7 +5,6 @@
   "description": "Личный проект «Большое путешествие» от HTML Academy",
   "scripts": {
     "build": "webpack",
-    "start": "webpack-dev-server --open",
     "watch": "webpack-dev-server --watch",
     "eslint": "eslint src/**/*.js",
     "test": "npm run eslint"
@@ -25,6 +24,8 @@
     "node": "10"
   },
   "dependencies": {
+    "chart.js": "2.9.3",
+    "chartjs-plugin-datalabels": "0.7.0",
     "flatpickr": "4.6.6",
     "moment": "2.28.0"
   }
