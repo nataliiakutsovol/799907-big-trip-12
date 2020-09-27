@@ -5,3 +5,16 @@ export const getRandomInteger = (a = 0, b = 1) => {
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 
+
+export const sortTripBy = () => {
+
+};
+
+export const sortTripByTime = () => {
+
+};
+
+export const sortTripByPrice = () => {
+  // const price = Array.from(this._boardTrips.map((trip) => trip.price).sort())
+  // console.log(price)
+};

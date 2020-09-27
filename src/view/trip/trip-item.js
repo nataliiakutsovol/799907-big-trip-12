@@ -17,16 +17,16 @@ const addOfferSelectors = (trip) => {
 };
 
 const addTripItem = (trip) => {
-  const {icons, transport, city, timeStart, timeEnd, price} = trip;
+  const {type, city, timeStart, timeEnd, price} = trip;
   const offerDescriptionTemplate = addOfferSelectors(trip);
   const diff = addTimeDifference(trip);
   return (
     `<li class="trip-events__item">
       <div class="event">
         <div class="event__type">
-          <img class="event__type-icon" width="42" height="42" src="img/icons/${icons}.png" alt="Event type icon">
+          <img class="event__type-icon" width="42" height="42" src="img/icons/${type.name}.png" alt="Event type icon">
         </div>
-        <h3 class="event__title">${transport} ${city}</h3>
+        <h3 class="event__title">${type.label} ${city}</h3>
 
         <div class="event__schedule">
           <p class="event__time">
@@ -43,7 +43,7 @@ const addTripItem = (trip) => {
 
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-         ${offerDescriptionTemplate}
+         ${type.isEventDetails ? offerDescriptionTemplate : ``}
         </ul>
 
         <button class="event__rollup-btn" type="button">
