@@ -7,7 +7,7 @@ export default class TripCounter extends Abstract {
   }
 
   takeTotalSum() {
-    return Array.from(this._trips.map((trip) => parseInt(trip.price, 10))).reduce((a, b) => a + b, 0);
+    return Array.from(this._trips.map((trip) => trip.price)).reduce((a, b) => a + b, 0);
   }
 
   _getTemplate() {

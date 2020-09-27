@@ -1,17 +1,32 @@
 import Smart from "./../smart";
 import {cities, eventRegistrationType, eventTransferType} from "../../const.js";
+import {generateId} from "./../../mock/trip-item";
 import flatpickr from "flatpickr";
 import "./../../../node_modules/flatpickr/dist/flatpickr.min.css";
 
+const BLANK_TRIP = {
+  type: {
+    name: `bus`,
+    label: `Bus to `
+  },
+  id: generateId(),
+  city: null,
+  date: new Date(),
+  timeStart: new Date(),
+  timeEnd: new Date(),
+  offers: [],
+  destination: ``,
+  isFavorite: false,
+};
+
 const addOfferSelectors = (data) => {
   const {offers} = data;
-  return offers ? `<div class="event__available-offers">
-    <section class="event__section  event__section--offers">
+  return offers ? `<section class="event__section  event__section--offers">
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
       <div class="event__available-offers">
       ${offers.map((offer, i) =>
     `<div class="event__offer-selector">
-          <input class="event__offer-checkbox  visually-hidden" id="event-offer-train-${i + 1}" type="checkbox" name="event-offer-train">
+          <input class="event__offer-checkbox visually-hidden" id="event-offer-train-${i + 1}" type="checkbox" title="${offer.name}" name="event-offer-train">
           <label class="event__offer-label" for="event-offer-train-${i + 1}">
             <span class="event__offer-title">${offer.name}</span>
             &plus;
@@ -19,8 +34,22 @@ const addOfferSelectors = (data) => {
           </label>
         </div>`).join(``)}
       </div>
-    </section>
-  </div>` : ` `;
+    </section>` : ` `;
+};
+
+const addDestination = (data) => {
+  const {destination} = data;
+  return destination ? `<section class="event__section  event__section--destination">
+  <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+  <p class="event__destination-description">${destination.text}</p>
+
+  <div class="event__photos-container">
+    <div class="event__photos-tape">
+    ${destination.photos.map((photo) =>
+    `<img class="event__photo" src="img/photos/${photo}.jpg" alt="Event photo">`).join(``)}
+    </div>
+  </div>
+</section>` : ` `;
 };
 
 const addCitiesList = () => {
@@ -31,7 +60,7 @@ const addCitiesList = () => {
 const addTransferList = () => {
   return eventTransferType.map((transfer) =>
     `<div class="event__type-item">
-      <input id="event-type-${transfer.name}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" title="${transfer.label}" value="${transfer.name}">
+      <input  id="event-type-${transfer.name}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" title="${transfer.label}" value="${transfer.name}">
       <label class="event__type-label  event__type-label--${transfer.name}" for="event-type-${transfer.name}-1">${transfer.name.charAt(0).toUpperCase() + transfer.name.substr(1)}</label>
     </div>`).join(``);
 };
@@ -44,22 +73,10 @@ const addRegistrationList = () => {
     </div>`).join(` `);
 };
 
-const BLANK_TRIP = {
-  type: {
-    name: `bus`,
-    label: `Bus to `
-  },
-  city: null,
-  date: new Date(),
-  timeStart: new Date(),
-  timeEnd: new Date(),
-  offers: [],
-  isFavorite: false,
-};
-
 const addEditTripContainer = (data, i) => {
   const {type, city, isDate, price, isFavorite} = data;
   const offerDescriptionTemplate = addOfferSelectors(data);
+  const destinationTemplate = addDestination(data);
   const citiesListTemplate = addCitiesList(i);
   const transferListTemplate = addTransferList(i);
   const registrationListTemplate = addRegistrationList(i);
@@ -133,7 +150,8 @@ const addEditTripContainer = (data, i) => {
     </header>
 
     <section class="event__details">
-    ${offerDescriptionTemplate}  
+    ${type.isEventDetails ? offerDescriptionTemplate : ``}
+    ${type.isEventDetails ? destinationTemplate : ``}
     </section>
   </form>`
   );
@@ -148,10 +166,10 @@ export default class EditTrip extends Smart {
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._formDeleteHandler = this._formDeleteHandler.bind(this);
     this._dateChangeHandler = this._dateChangeHandler.bind(this);
-    this._eventTypeInputHandler = this._eventTypeInputHandler.bind(this);
+    this._addEventTypeHandler = this._addEventTypeHandler.bind(this);
+    this._addOffers = this._addOffers.bind(this);
     this._cityInputHandler = this._cityInputHandler.bind(this);
     this._addToFavoriteHandler = this._addToFavoriteHandler.bind(this);
-    this.checkCityInputValue = this.checkCityInputValue(this);
     this._priceInputHandler = this._priceInputHandler.bind(this);
     this._tripClickHandler = this._tripClickHandler.bind(this);
     this._setInnerHandlers();
@@ -201,26 +219,19 @@ export default class EditTrip extends Smart {
   restoreHandlers() {
     this._setInnerHandlers();
     this._setDatepicker();
+    this.setOffersClickHandler(this._callback.offersClick);
+    this.setEventTypeClickHandler(this._callback.evenTypeClick);
     this.setSubmitClickHandler(this._callback.onSubmit);
     this.setDeleteClickHandler(this._callback.onDelete);
   }
 
   _setInnerHandlers() {
-    this.getElement().querySelector(`.event__type-list`).addEventListener(`input`, this._eventTypeInputHandler);
+    this.getElement().querySelectorAll(`.event__offer-checkbox`).forEach((el) => {
+      el.addEventListener(`input`, this._addOffers);
+    });
     this.getElement().querySelector(`.event__input--destination`).addEventListener(`input`, this._cityInputHandler);
     this.getElement().querySelector(`.event__input--price`).addEventListener(`input`, this._priceInputHandler);
     this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, this._addToFavoriteHandler);
-  }
-
-  _eventTypeInputHandler(evt) {
-    evt.preventDefault();
-    this.updateData({
-      type: {
-        name: evt.target.value,
-        label: evt.target.title
-      }
-    }, true);
-    debugger
   }
 
   _cityInputHandler(evt) {
@@ -228,15 +239,6 @@ export default class EditTrip extends Smart {
     this.updateData({
       city: evt.target.value
     }, true);
-  }
-
-  // функцию для проверки введенного пользователем города я то написала,
-  // но не понимаю как "вытянуть ее наверх" в темплейт самой кнопки save, помоги плиз:)
-  checkCityInputValue() {
-    let cityInput = this.getElement().querySelector(`.event__input--destination`);
-    if (cities.includes(cityInput.value)) {
-    // isDisabled = true;
-    }
   }
 
   _priceInputHandler(evt) {
@@ -275,6 +277,32 @@ export default class EditTrip extends Smart {
     this.updateData({
       isFavorite: !this._data.isFavorite,
     }, true);
+  }
+
+  _addOffers(evt) {
+    const offer = this._data.offers.find((c) => c.name === evt.target.title);
+    const offers = [];
+    offers.push(offer);
+    this.updateData({
+      offers: [offers]
+    }, true);
+  }
+
+  _addEventTypeHandler(evt) {
+    evt.preventDefault();
+    const type = [...eventTransferType, ...eventRegistrationType].find((c) => c.name === evt.target.value);
+    this.updateData({
+      type: [type]
+    }, true);
+    this._callback.evenTypeClick(this._data);
+  }
+
+  setEventTypeClickHandler(callback) {
+    this._callback.evenTypeClick = callback;
+    this.getElement()
+    .querySelectorAll(`.event__type-input`).forEach((el) => {
+      el.addEventListener(`input`, this._addEventTypeHandler);
+    });
   }
 
   _formSubmitHandler(evt) {

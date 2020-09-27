@@ -6,7 +6,7 @@ export const getRandomInteger = (a = 0, b = 1) => {
 };
 
 
-export const sortTripByEvent = () => {
+export const sortTripBy = () => {
 
 };
 

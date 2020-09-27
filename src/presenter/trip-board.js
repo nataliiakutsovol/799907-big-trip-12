@@ -9,13 +9,15 @@ import {render, remove} from './../utils/render.js';
 import {filter} from "./../utils/filters.js";
 import {SortType, FilterType, UpdateType, UserAction} from './../const.js';
 import TripPresenter from './trip';
-import FirstTripPresenter from "./first-trip.js";
+import FirstTripPresenter from "./first-trip";
+import EventDetailsPresenter from "./event-details";
 
 export default class TripBoard {
-  constructor(mainBody, tripModel, filtersModel) {
+  constructor(mainBody, tripModel, filtersModel, eventDetailsModel) {
     this._mainBody = mainBody;
     this._tripsModel = tripModel;
     this._filtersModel = filtersModel;
+    this._eventDetailsModel = eventDetailsModel;
     this._MainContainer = new MainContainer();
     this._HeaderContainer = new HeaderContainer();
     this._MenuContainer = new Menu();
@@ -25,6 +27,7 @@ export default class TripBoard {
     this._currentSortType = SortType.EVENT;
     this._tripPresenter = {};
     this._filtersPresenter = {};
+    this._eventDetailsPresenter = {};
     this._firstTripPresenter = new FirstTripPresenter(this._TripListContainer, this._handleViewAction, this._tripsModel);
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
@@ -49,11 +52,11 @@ export default class TripBoard {
   _getTrips() {
     // switch (this._currentSortType) {
     //   case SortType.EVENT:
-    //     return this._tripsModel.getTrips().slice().sort(sortTripByEvent);
+    //     return this._tripsModel.getTrips().slice().sort();
     //   case SortType.TIME:
-    //     return this._tripsModel.getTrips().slice().sort(sortTripByTime);
+    //     return this._tripsModel.getTrips().slice().sort();
     //   case SortType.PRICE:
-    //     return this._tripsModel.getTrips().slice().sort(sortTripByPrice);
+    //     return this._tripsModel.getTrips().slice().map((trip) => trip.price).sort((a, b) => {return a - b });
     // }
 
     const filterType = this._filtersModel.getFilters();
@@ -144,8 +147,11 @@ export default class TripBoard {
 
   _renderTrip(tripDayList, i, trip) {
     const tripPresenter = new TripPresenter(tripDayList, this._handleViewAction, this._handleModeChange);
+    const eventDetailsPresenter = new EventDetailsPresenter(this._handleViewAction);
+    eventDetailsPresenter.init(trip);
     tripPresenter.init(trip);
     this._tripPresenter[trip.id] = tripPresenter;
+    this._eventDetailsPresenter[trip.id] = eventDetailsPresenter;
   }
 
   _renderNoTrips() {

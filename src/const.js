@@ -20,52 +20,73 @@ export const sortId = [`event`, `time`, `price`];
 export const eventTransferType = [{
   name: `taxi`,
   label: `Taxi to `,
+  isEventDetails: false,
 },
 {
   name: `bus`,
   label: `Bus to `,
+  isEventDetails: true,
 },
 {
   name: `train`,
   label: `Train to `,
+  isEventDetails: false,
 },
 {
   name: `ship`,
   label: `Ship to `,
+  isEventDetails: false,
 },
 {
   name: `transport`,
   label: `Transport to `,
+  isEventDetails: true,
 },
 {
   name: `drive`,
   label: `Drive to `,
+  isEventDetails: true,
 },
 {
   name: `flight`,
   label: `Flight to `,
+  isEventDetails: false,
 }];
 
 export const eventRegistrationType = [{
   name: `check-in`,
   label: `Check-in `,
+  isEventDetails: true,
 },
 {
   name: `sightseeing`,
   label: `Sightseeing to `,
+  isEventDetails: false,
 },
 {
   name: `restaurant`,
   label: `Restaurant in `,
+  isEventDetails: true,
+}];
+
+export const eventDestinations = [{
+  text: `destination1`,
+  photos: [`1`, `2`, `3`, `4`, `5`]
+},
+{
+  text: `destination2`,
+  photos: [`3`, `4`, `5`, `2`, `1`]
+},
+{
+  text: `destination3`,
+  photos: [`1`, `2`, `3`, `4`, `5`]
+},
+{
+  text: `destination4`,
+  photos: [`4`, `5`, `3`, `2`, `1`]
 }];
 
 export const cities = [`Rome`, `New York`, `Milan`, `Paris`, `Berlin`];
-
-export const btnObj = {
-  text: [`Save`, `Cancel`],
-  type: [`submit`, `reset`],
-  btnClass: [`event__save-btn  btn  btn--blue`, `event__reset-btn`]
-};
 
 export const FilterType = {
   PAST: `past`,

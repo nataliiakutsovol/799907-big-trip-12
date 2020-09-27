@@ -9,6 +9,8 @@ export default class FirstTripPresenter {
     this._changeData = changeData;
     this._tripsModel = tripsModel;
     this._tripEditElement = null;
+    this._addEventTypeHandler = this._addEventTypeHandler.bind(this);
+    this._addToFavoriteHandler = this._addToFavoriteHandler.bind(this);
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._formDeleteHandler = this._formDeleteHandler.bind(this);
@@ -21,6 +23,8 @@ export default class FirstTripPresenter {
     }
 
     this._tripEditElement = new EditTrip();
+    this._tripEditElement.setTripClickHandler(this._addToFavoriteHandler);
+    this._tripEditElement.setEventTypeClickHandler(this._addEventTypeHandler);
     this._tripEditElement.setTripClickHandler(this._tripClickHandler);
     this._tripEditElement.setSubmitClickHandler(this._formSubmitHandler);
     this._tripEditElement.setDeleteClickHandler(this._formDeleteHandler);
@@ -39,6 +43,28 @@ export default class FirstTripPresenter {
     this._tripEditElement = null;
 
     document.removeEventListener(`keydown`, this._onEscKeyDown);
+  }
+
+  _addToFavoriteHandler() {
+    this._changeData(
+        UserAction.UPDATE_TRIP,
+        UpdateType.PATCH,
+        Object.assign(
+            { },
+            this._trip,
+            {
+              isFavorite: !this._trip.isFavorite,
+            }
+        )
+    );
+  }
+
+  _addEventTypeHandler(trip) {
+    this._changeData(
+        UserAction.ADD_TRIP,
+        UpdateType.PATCH,
+        trip
+    );
   }
 
   _formSubmitHandler(trip) {

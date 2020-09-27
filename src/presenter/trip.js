@@ -2,6 +2,7 @@ import Trip from './../view/trip/trip-item.js';
 import EditTrip from './../view/edit-trip/edit-trip-container.js';
 import {render, replace, remove} from './../utils/render';
 import {UserAction, UpdateType} from "./../const.js";
+import EventDetailsPresenter from "./event-details";
 
 const Mode = {
   DEFAULT: `DEFAULT`,
@@ -19,10 +20,12 @@ export default class TripPresenter {
 
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
     this._editClickHandler = this._editClickHandler.bind(this);
+    this._addEventTypeHandler = this._addEventTypeHandler.bind(this);
     this._tripClickHandler = this._tripClickHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._formDeleteHandler = this._formDeleteHandler.bind(this);
     this._changeMode = changeMode;
+    this._eventDetailsPresenter = new EventDetailsPresenter();
   }
 
   init(trip) {
@@ -32,8 +35,8 @@ export default class TripPresenter {
     const prevEditTripElement = this._tripEditElement;
     this._tripElement = new Trip(trip);
     this._tripEditElement = new EditTrip(trip);
-
     this._tripElement.setEditTripClickHandler(this._editClickHandler);
+    this._tripEditElement.setEventTypeClickHandler(this._addEventTypeHandler);
     this._tripEditElement.setTripClickHandler(this._tripClickHandler);
     this._tripEditElement.setSubmitClickHandler(this._formSubmitHandler);
     this._tripEditElement.setDeleteClickHandler(this._formDeleteHandler);
@@ -88,6 +91,22 @@ export default class TripPresenter {
 
   _editClickHandler() {
     this._replaceTripToEdit();
+  }
+
+  _addEventTypeHandler(trip) {
+    this._changeData(
+        UserAction.UPDATE_TRIP,
+        UpdateType.PATCH,
+        {...trip }
+    );
+  }
+
+  _addOffers(trip) {
+    this._changeData(
+      UserAction.UPDATE_TRIP,
+      UpdateType.PATCH,
+      {...trip }
+    );
   }
 
   // _addToFavoriteHandler() {

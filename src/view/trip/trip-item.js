@@ -43,7 +43,7 @@ const addTripItem = (trip) => {
 
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-         ${offerDescriptionTemplate}
+         ${type.isEventDetails ? offerDescriptionTemplate : ``}
         </ul>
 
         <button class="event__rollup-btn" type="button">

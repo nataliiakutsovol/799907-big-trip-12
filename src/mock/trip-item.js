@@ -1,5 +1,5 @@
 import {getRandomInteger} from "../utils/common.js";
-import {eventTransferType, eventRegistrationType, offerDescription} from "../const.js";
+import {eventTransferType, eventRegistrationType, offerDescription, eventDestinations} from "../const.js";
 
 const generateType = () => {
   const descriptions = [...eventTransferType, ...eventRegistrationType];
@@ -18,7 +18,7 @@ const generateCity = () => {
 };
 
 const generatePrice = () => {
-  const descriptions = [`40`, `100`, `150`, `200`, `180`];
+  const descriptions = [40, 100, 150, 200, 180];
 
   const randomIndex = getRandomInteger(0, descriptions.length - 1);
 
@@ -53,6 +53,12 @@ const generateOffers = () => {
   return offerDescription[randomIndex];
 };
 
+const generateDestination = () => {
+  const randomIndex = getRandomInteger(1, eventDestinations.length - 1);
+
+  return eventDestinations[randomIndex];
+};
+
 export const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
 
 const MAX_OFFERS = getRandomInteger(0, 3);
@@ -68,6 +74,7 @@ export const generateTrip = () => {
     timeEnd: generateTimeRange(),
     price: generatePrice(),
     offers: offerArr,
+    destination: generateDestination(),
     isFavorite: Boolean(getRandomInteger(0, 1)),
   };
 };

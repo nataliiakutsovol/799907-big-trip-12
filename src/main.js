@@ -12,16 +12,23 @@ import TripBoard from "./presenter/trip-board.js";
 import FiltersPresenter from "./presenter/filters.js";
 import TripsModel from "./model/trip";
 import FiltersModel from "./model/filters";
+import EventDetailsModel from "./model/event-detail";
+
+const mainBody = document.querySelector(`.page-body`);
 
 const trips = new Array(TRIP_COUNT).fill().map(generateTrip);
 const tripsModel = new TripsModel();
 tripsModel.setTrips(trips);
 
+const offers = trips.map((trip) => trip.offers);
+const destination = trips.map((trip) => trip.destination);
+const eventDetailsModel = new EventDetailsModel();
+eventDetailsModel.setOffers(offers);
+eventDetailsModel.setDestination(destination);
+
 const filtersModel = new FiltersModel();
 
-const mainBody = document.querySelector(`.page-body`);
-
-const boardPresenter = new TripBoard(mainBody, tripsModel, filtersModel);
+const boardPresenter = new TripBoard(mainBody, tripsModel, filtersModel, eventDetailsModel);
 boardPresenter.init();
 
 const filtersPresenter = new FiltersPresenter(mainBody, tripsModel, filtersModel);
@@ -30,40 +37,7 @@ filtersPresenter.init();
 const tripCounterSection = mainBody.querySelector(`.trip-main`);
 render(tripCounterSection, new TripCounter(tripsModel), true);
 
-document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, (evt) => {
+mainBody.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, (evt) => {
   evt.preventDefault();
   boardPresenter.createTrip();
 });
-
-// main body components
-// const mainContainer = mainBody.querySelector(`.page-main`);
-// const tripDetailsContainer = mainContainer.querySelector(`.event--edit`);
-// render(tripDetailsContainer, new TripDetails().getElement());
-// const tripOfferSection = tripDetailsContainer.querySelector(`.event__section--offers`);
-// render(tripOfferSection, new TripOffers().getElement());
-// const tripDestignationSection = tripDetailsContainer.querySelector(`.event__section--destination`);
-// render(tripDestignationSection, new TripDestignation().getElement());
-
-// const tripEventsHeader = mainContainer.querySelector(`.event__header`);
-// const tripEventWrapper = tripEventsHeader.querySelector(`.event__type-wrapper`);
-// const tripEventDestination = tripEventsHeader.querySelector(`.event__field-group--destination`);
-// const tripEventTiming = tripEventsHeader.querySelector(`.event__field-group--time`);
-// const tripEventPricing = tripEventsHeader.querySelector(`.event__field-group--price`);
-// render(tripEventWrapper, new EventTypeIconSection().getElement(), true);
-// render(tripEventDestination, new EventDestination(), true);
-// render(tripEventTiming, new EventTime().getElement(), true);
-// render(tripEventPricing, new EventPrice().getElement(), true);
-// for (let i = 0; i < btnObj.type.length; i++) {
-//   render(tripEventsHeader, new Buttons(i).getElement());
-// }
-// const tripTransferList = tripEventWrapper.querySelector(`.event__type-list`);
-// render(tripTransferList, new TransferList().getElement(), true);
-// const transferItem = tripTransferList.querySelector(`.event__transfer`);
-// for (let i = 0; i < transferValue.length; i++) {
-//   render(transferItem, new TransferInput(i).getElement());
-// }
-// render(tripTransferList, new RegistrationList().getElement());
-// const registrationItem = tripTransferList.querySelector(`.event__registration`);
-// for (let i = 0; i < registrationText.length; i++) {
-//   render(registrationItem, new RegistrationInput(i).getElement());
-// }
