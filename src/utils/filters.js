@@ -21,16 +21,3 @@ export const filter = {
   [FilterType.FUTURE]: (trips) => trips.filter((trip) => isFilterFuture(trip.date)),
   [FilterType.EVERYTHING]: (trips) => trips.filter((trip) => isFilterEverything(trip.date)),
 };
-
-export const sortTripByEvent = () => {
-
-};
-
-export const sortTripByTime = () => {
-
-};
-
-export const sortTripByPrice = () => {
-  // const price = Array.from(this._boardTrips.map((trip) => trip.price).sort())
-  // console.log(price)
-};

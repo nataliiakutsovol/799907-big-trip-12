@@ -1,37 +1,37 @@
 import NoTripsContainer from "./../view/no-trips";
 import HeaderContainer from './../view/header-container.js';
 import MainContainer from './../view/main-container.js';
-import TripCounter from './../view/counter.js';
 import Menu from './../view/menu.js';
 import SortContainer from './../view/sorting-container.js';
-import FirstTripEvent from './../view/first-trip/first-trip-container.js';
 import TripListContainer from './../view/trip/trip-list-container.js';
 import TripDayList from './../view/trip/trip-day-list.js';
 import {render, remove} from './../utils/render.js';
 import {filter} from "./../utils/filters.js";
-import {SortType, UpdateType, UserAction} from './../const.js';
+import {SortType, FilterType, UpdateType, UserAction} from './../const.js';
 import TripPresenter from './trip';
+import FirstTripPresenter from "./first-trip";
+import EventDetailsPresenter from "./event-details";
 
 export default class TripBoard {
-  constructor(mainBody, tripModel, filtersModel) {
+  constructor(mainBody, tripModel, filtersModel, eventDetailsModel) {
     this._mainBody = mainBody;
     this._tripsModel = tripModel;
     this._filtersModel = filtersModel;
+    this._eventDetailsModel = eventDetailsModel;
     this._MainContainer = new MainContainer();
     this._HeaderContainer = new HeaderContainer();
     this._MenuContainer = new Menu();
     this._SortingContainer = new SortContainer();
-    this._FirstTripContainer = new FirstTripEvent();
     this._TripListContainer = new TripListContainer();
     this._NoTripsContainer = new NoTripsContainer();
     this._currentSortType = SortType.EVENT;
     this._tripPresenter = {};
     this._filtersPresenter = {};
-
+    this._eventDetailsPresenter = {};
+    this._firstTripPresenter = new FirstTripPresenter(this._TripListContainer, this._handleViewAction, this._tripsModel);
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
-
     this._tripsModel.addObserver(this._handleModelEvent);
     this._filtersModel.addObserver(this._handleModelEvent);
   }
@@ -43,14 +43,20 @@ export default class TripBoard {
     this._tripList();
   }
 
+  createTrip() {
+    this._currentSortType = SortType.EVENT;
+    this._filtersModel.getFilters(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this._firstTripPresenter.init();
+  }
+
   _getTrips() {
     // switch (this._currentSortType) {
     //   case SortType.EVENT:
-    //     return this._tripsModel.getTrips().slice().sort(sortTripByEvent);
+    //     return this._tripsModel.getTrips().slice().sort();
     //   case SortType.TIME:
-    //     return this._tripsModel.getTrips().slice().sort(sortTripByTime);
+    //     return this._tripsModel.getTrips().slice().sort();
     //   case SortType.PRICE:
-    //     return this._tripsModel.getTrips().slice().sort(sortTripByPrice);
+    //     return this._tripsModel.getTrips().slice().map((trip) => trip.price).sort((a, b) => {return a - b });
     // }
 
     const filterType = this._filtersModel.getFilters();
@@ -60,6 +66,7 @@ export default class TripBoard {
   }
 
   _handleModeChange() {
+    this._firstTripPresenter.destroy();
     Object
       .values(this._tripPresenter)
       .forEach((presenter) => presenter.resetView());
@@ -105,12 +112,6 @@ export default class TripBoard {
     this._tripList();
   }
 
-  _renderCounter() {
-    this._TripCounter = new TripCounter();
-    const tripCounterSection = this._HeaderContainer.getElement().querySelector(`.trip-main`);
-    render(tripCounterSection, this._TripCounter, true);
-  }
-
   _renderMenuContainer() {
     const menuContainer = this._HeaderContainer.getElement().querySelector(`.trip-controls`);
     render(menuContainer, this._MenuContainer);
@@ -118,10 +119,6 @@ export default class TripBoard {
 
   _renderSorting() {
     render(this._MainContainer, this._SortingContainer);
-  }
-
-  _renderFirstTrip() {
-    render(this._SortingContainer, this._FirstTripContainer);
   }
 
   _renderTripDayListContainer() {
@@ -150,8 +147,11 @@ export default class TripBoard {
 
   _renderTrip(tripDayList, i, trip) {
     const tripPresenter = new TripPresenter(tripDayList, this._handleViewAction, this._handleModeChange);
+    const eventDetailsPresenter = new EventDetailsPresenter(this._handleViewAction);
+    eventDetailsPresenter.init(trip);
     tripPresenter.init(trip);
     this._tripPresenter[trip.id] = tripPresenter;
+    this._eventDetailsPresenter[trip.id] = eventDetailsPresenter;
   }
 
   _renderNoTrips() {
@@ -160,6 +160,7 @@ export default class TripBoard {
 
   _clearBoard({resetSortType = false} = {}) {
     const tripCount = this._getTrips().length;
+    this._firstTripPresenter.destroy();
 
     Object
       .values(this._tripPresenter)
@@ -167,7 +168,6 @@ export default class TripBoard {
     this._tripPresenter = {};
 
     remove(this._SortingContainer);
-    remove(this._noTripsContainer);
     remove(this._TripListContainer);
 
     this._renderedTripCount = Math.min(tripCount, this._renderedTripCount);
@@ -178,7 +178,6 @@ export default class TripBoard {
   }
 
   _tripBoard() {
-    this._renderCounter();
     this._renderMenuContainer();
   }
 
