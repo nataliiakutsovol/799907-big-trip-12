@@ -1,13 +1,5 @@
 # Личный проект «Большое путешествие» [![Build status][travis-image]][travis-url]
 
-* Студент: [Natalie Kustovol](https://up.htmlacademy.ru/ecmascript/12/user/799907).
-* Наставник: `Иван Кривонос`.
-
----
-
-_Не удаляйте и не изменяйте папки и файлы:_
-_`.editorconfig`, `.gitattributes`, `.travis.yml`._
-
 ---
 
 ### Памятка
